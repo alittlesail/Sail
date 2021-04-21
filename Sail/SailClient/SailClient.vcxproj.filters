@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="..\..\kcp\ikcp.c">
+      <Filter>kcp</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Carp">
+      <UniqueIdentifier>{5461b2af-6e35-407c-b32d-7abcf469f787}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="kcp">
+      <UniqueIdentifier>{a555f07c-4853-498c-b587-1b45e1d06301}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Carp\carp_file_bind.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_file_cache.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_font.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_http.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_log.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_log_bind.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_math_2d.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_message.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_message_bind.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_miniheap.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_mysql.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_net_bind.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_safe_id_creator.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_schedule.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_script.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_string.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_string_bind.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_system.h">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_task_consumer.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_task_consumer_bind.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_thread_consumer.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_time.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_timer.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_timer_bind.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_bit_bind.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_connect_client.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_console.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_crypto.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_crypto_bind.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_csv.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_csv_bind.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_dump.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_file.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_lua.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_surface_bind.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_surface.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_rwops_bind.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_mixer.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_rwops.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_connect_server.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_lua_debug.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_rudp_client.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\kcp\ikcp.h">
+      <Filter>kcp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_rudp_server.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_lua_profiler.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_lua_decompile.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_lua_worker.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_process.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_process_bind.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_square_jps.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_square_jps_bind.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_udp_server.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_rtp_server.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
