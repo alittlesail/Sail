@@ -1,0 +1,15 @@
+[submodule "Carp"]
+	path = Carp
+	url = https://github.com/alittlesail/ALittle-Carp.git
+[submodule "sokol"]
+	path = sokol
+	url = https://github.com/floooh/sokol.git
+[submodule "stb"]
+	path = stb
+	url = https://github.com/nothings/stb.git
+[submodule "asio"]
+	path = asio
+	url = https://github.com/chriskohlhoff/asio.git
+[submodule "kcp"]
+	path = kcp
+	url = https://github.com/skywind3000/kcp.git
