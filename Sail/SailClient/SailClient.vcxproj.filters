@@ -13,6 +13,9 @@
     <Filter Include="kcp">
       <UniqueIdentifier>{a555f07c-4853-498c-b587-1b45e1d06301}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sokol">
+      <UniqueIdentifier>{4017d633-01be-4fe0-af0c-114714060872}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Carp\carp_file_bind.hpp">
@@ -173,6 +176,27 @@
     </ClInclude>
     <ClInclude Include="..\..\Carp\carp_rtp_server.hpp">
       <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sokol\sokol_audio.h">
+      <Filter>sokol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sokol\sokol_fetch.h">
+      <Filter>sokol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sokol\sokol_gfx.h">
+      <Filter>sokol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sokol\sokol_glue.h">
+      <Filter>sokol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sokol\sokol_time.h">
+      <Filter>sokol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sokol\sokol_app.h">
+      <Filter>sokol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sokol\sokol_args.h">
+      <Filter>sokol</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

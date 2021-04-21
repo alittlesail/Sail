@@ -1,2 +1,4 @@
 /Sail/temp
 /Sail/.vs
+/bin/*.ilk
+/bin/*.pdb
