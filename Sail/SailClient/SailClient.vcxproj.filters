@@ -16,6 +16,15 @@
     <Filter Include="sokol">
       <UniqueIdentifier>{4017d633-01be-4fe0-af0c-114714060872}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sail">
+      <UniqueIdentifier>{42ba94b0-7eae-4aed-8c7b-fc3a8992d8ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sail\2D">
+      <UniqueIdentifier>{0cd5174c-847a-41f2-af4c-9d4b055fc889}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sail\UI">
+      <UniqueIdentifier>{b77de6bc-fdbf-4f72-a122-1f20cdf298d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Carp\carp_file_bind.hpp">
@@ -197,6 +206,33 @@
     </ClInclude>
     <ClInclude Include="..\..\sokol\sokol_args.h">
       <Filter>sokol</Filter>
+    </ClInclude>
+    <ClInclude Include="sail_schedule.hpp">
+      <Filter>Sail</Filter>
+    </ClInclude>
+    <ClInclude Include="sail_ui_layer.hpp">
+      <Filter>Sail</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\sail_ui_layer.hpp">
+      <Filter>Sail\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="2D\sail_2d_object.hpp">
+      <Filter>Sail\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="2D\sail_2d_objects.hpp">
+      <Filter>Sail\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\sail_ui_object.hpp">
+      <Filter>Sail\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_event_dispatcher.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\sail_ui_event.hpp">
+      <Filter>Sail\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\sail_ui_system.hpp">
+      <Filter>Sail\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
