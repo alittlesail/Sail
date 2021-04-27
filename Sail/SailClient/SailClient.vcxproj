@@ -16,6 +16,7 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">/bigobj %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <ClCompile Include="UI\sail_ui_object.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Carp\carp_bit_bind.hpp" />
@@ -82,10 +83,10 @@
     <ClInclude Include="2D\sail_2d_object.hpp" />
     <ClInclude Include="2D\sail_2d_objects.hpp" />
     <ClInclude Include="sail_schedule.hpp" />
-    <ClInclude Include="sail_ui_layer.hpp" />
     <ClInclude Include="UI\sail_ui_event.hpp" />
     <ClInclude Include="UI\sail_ui_layer.hpp" />
     <ClInclude Include="UI\sail_ui_object.hpp" />
+    <ClInclude Include="UI\sail_ui_objects.hpp" />
     <ClInclude Include="UI\sail_ui_system.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

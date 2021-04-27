@@ -3,7 +3,8 @@
 
 #include <string>
 
-#include "sail_ui_layer.hpp"
+#include "Sail/SailClient/UI/sail_ui_layer.hpp"
+#include "Sail/SailClient/UI/sail_ui_system.hpp"
 
 #include "Carp/carp_dump.hpp"
 #include "Carp/carp_log.hpp"
@@ -73,6 +74,55 @@ public:
 	// 处理事件
 	void HandleEvent(const sapp_event& event)
 	{
+		if (event.type == SAPP_EVENTTYPE_MOUSE_DOWN)
+		{
+			if (event.mouse_button == SAPP_MOUSEBUTTON_LEFT)
+				s_sail_ui_system.HandleLeftButtonDown(static_cast<int>(event.mouse_x), static_cast<int>(event.mouse_y), 1);
+			else if (event.mouse_button == SAPP_MOUSEBUTTON_MIDDLE)
+				s_sail_ui_system.HandleMiddleButtonDown(static_cast<int>(event.mouse_x), static_cast<int>(event.mouse_y), 1);
+			else if (event.mouse_button == SAPP_MOUSEBUTTON_RIGHT)
+				s_sail_ui_system.HandleRightButtonDown(static_cast<int>(event.mouse_x), static_cast<int>(event.mouse_y), 1);
+		}
+		else if (event.type == SAPP_EVENTTYPE_MOUSE_UP)
+		{
+			if (event.mouse_button == SAPP_MOUSEBUTTON_LEFT)
+				s_sail_ui_system.HandleLeftButtonUp(static_cast<int>(event.mouse_x), static_cast<int>(event.mouse_y));
+			else if (event.mouse_button == SAPP_MOUSEBUTTON_MIDDLE)
+				s_sail_ui_system.HandleMiddleButtonUp(static_cast<int>(event.mouse_x), static_cast<int>(event.mouse_y));
+			else if (event.mouse_button == SAPP_MOUSEBUTTON_RIGHT)
+				s_sail_ui_system.HandleRightButtonUp(static_cast<int>(event.mouse_x), static_cast<int>(event.mouse_y));
+		}
+		else if (event.type == SAPP_EVENTTYPE_MOUSE_MOVE)
+		{
+			s_sail_ui_system.HandleMouseMove(static_cast<int>(event.mouse_x), static_cast<int>(event.mouse_y));
+		}
+		else if (event.type == SAPP_EVENTTYPE_MOUSE_SCROLL)
+		{
+			s_sail_ui_system.HandleMouseWheel(static_cast<int>(event.scroll_x), static_cast<int>(event.scroll_y));
+		}
+		else if (event.type == SAPP_EVENTTYPE_MOUSE_ENTER)
+		{
+			s_sail_ui_system.HandleMouseEnterWindow();
+		}
+		else if (event.type == SAPP_EVENTTYPE_MOUSE_LEAVE)
+		{
+			s_sail_ui_system.HandleMouseLeaveWindow();
+		}
+		else if (event.type == SAPP_EVENTTYPE_TOUCHES_BEGAN)
+		{
+			for (int i = 0; i < event.num_touches; ++i)
+				s_sail_ui_system.HandleTouchDown(static_cast<int>(event.touches[i].pos_x), static_cast<int>(event.touches[i].pos_y), event.touches[i].identifier);
+		}
+		else if (event.type == SAPP_EVENTTYPE_TOUCHES_MOVED)
+		{
+			for (int i = 0; i < event.num_touches; ++i)
+				s_sail_ui_system.HandleTouchMove(static_cast<int>(event.touches[i].pos_x), static_cast<int>(event.touches[i].pos_y), event.touches[i].identifier);
+		}
+		else if (event.type == SAPP_EVENTTYPE_TOUCHES_ENDED || event.type == SAPP_EVENTTYPE_TOUCHES_CANCELLED)
+		{
+			for (int i = 0; i < event.num_touches; ++i)
+				s_sail_ui_system.HandleTouchUp(static_cast<int>(event.touches[i].pos_x), static_cast<int>(event.touches[i].pos_y), event.touches[i].identifier);
+		}
 	}
 
 public:
@@ -94,7 +144,6 @@ public:
 		// 提交变更
 		sg_end_pass();
 		sg_commit();
-
 	}
 
 	// 退出进程

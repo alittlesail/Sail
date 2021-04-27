@@ -20,17 +20,9 @@ public:
 
 public:
 	// 显示、隐藏、裁剪
-	virtual void SetVisible(bool visible)
-	{
-		if (visible == false) m_self_matrix_dirty = true;
-		m_visible = visible;
-	}
+	virtual void SetVisible(bool visible) { if (visible == false) m_self_matrix_dirty = true; m_visible = visible; }
 	virtual bool GetVisible() const { return m_visible; }
-	virtual void SetClip(bool clip)
-	{
-		if (clip == true) m_self_matrix_dirty = true;
-		m_clip = clip;
-	}
+	virtual void SetClip(bool clip) { if (clip == true) m_self_matrix_dirty = true; m_clip = clip; }
 
 	// 设置和获取坐标
 	virtual void SetX(int x) { if (m_pos_x == x) return; m_pos_x = x; m_self_matrix_dirty = true; }
@@ -45,7 +37,7 @@ public:
 	virtual int GetHeight() { return m_height; }
 
 	// 设置旋转
-	virtual void SetAngle(float angle) { m_angle = angle; m_self_matrix_dirty = true; }
+	virtual void SetRotate(float rotate) { m_rotate = rotate; m_self_matrix_dirty = true; }
 
 	// 设置缩放
 	virtual void SetScaleX(float x) { m_scale_x = x; m_self_matrix_dirty = true; }
@@ -56,10 +48,10 @@ public:
 	virtual void SetCenterY(int y) { if (m_center_y == y) return; m_center_y = y; m_self_matrix_dirty = true; }
 
 	// 设置颜色
-	virtual void SetRed(float red) { m_color.r = red; }
-	virtual void SetGreen(float green) { m_color.g = green; }
-	virtual void SetBlue(float blue) { m_color.b = blue; }
-	virtual void SetAlpha(float alpha) { m_color.a = alpha; }
+	virtual void SetRed(float red) { m_red = red; }
+	virtual void SetGreen(float green) { m_green = green; }
+	virtual void SetBlue(float blue) { m_blue = blue; }
+	virtual void SetAlpha(float alpha) { m_alpha = alpha; }
 
 public:
 	// 设置本地坐标为脏
@@ -80,7 +72,7 @@ public:
 		// 设置缩放
 		m_self_matrix.Scale(m_scale_x, m_scale_y);
 		// 设置旋转
-		m_self_matrix.Rotate(m_angle);
+		m_self_matrix.Rotate(m_rotate);
 		// 设置坐标
 		m_self_matrix.Translation(static_cast<float>(m_pos_x), static_cast<float>(m_pos_y));
 
@@ -119,10 +111,13 @@ protected:
 protected:
 	int m_pos_x = 0, m_pos_y = 0;								// 坐标
 	float m_scale_x = 1.0f, m_scale_y = 1.0f;					// 缩放
-	sg_color m_color = {1.0f, 1.0f, 1.0f, 1.0f};		// 颜色
+	float m_red = 1.0f;											// 颜色
+	float m_green = 1.0f;
+	float m_blue = 1.0f;
+	float m_alpha = 1.0f;
 	int m_width = 0, m_height = 0;								// 宽高
 	int m_center_x = 0, m_center_y = 0;							// 锚点
-	float m_angle = 0.0f;										// 旋转弧度
+	float m_rotate = 0.0f;										// 旋转弧度
 
 protected:
 	CarpMatrix2D m_self_matrix;			// 保存本地矩阵

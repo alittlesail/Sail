@@ -5,6 +5,9 @@
     <ClCompile Include="..\..\kcp\ikcp.c">
       <Filter>kcp</Filter>
     </ClCompile>
+    <ClCompile Include="UI\sail_ui_object.cpp">
+      <Filter>Sail\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Carp">
@@ -210,9 +213,6 @@
     <ClInclude Include="sail_schedule.hpp">
       <Filter>Sail</Filter>
     </ClInclude>
-    <ClInclude Include="sail_ui_layer.hpp">
-      <Filter>Sail</Filter>
-    </ClInclude>
     <ClInclude Include="UI\sail_ui_layer.hpp">
       <Filter>Sail\UI</Filter>
     </ClInclude>
@@ -232,6 +232,9 @@
       <Filter>Sail\UI</Filter>
     </ClInclude>
     <ClInclude Include="UI\sail_ui_system.hpp">
+      <Filter>Sail\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\sail_ui_objects.hpp">
       <Filter>Sail\UI</Filter>
     </ClInclude>
   </ItemGroup>

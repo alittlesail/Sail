@@ -1,9 +1,6 @@
 #ifndef SAIL_2D_OBJECTS_INCLUDED
 #define SAIL_2D_OBJECTS_INCLUDED
 
-#include <algorithm>
-#include <vector>
-
 #include "sail_2d_object.hpp"
 
 class Sail2DObjects : public Sail2DObject
@@ -186,7 +183,7 @@ public:
 	}
 
 protected:
-	void RenderImpl(bool global_changed)
+	void RenderImpl(bool global_changed) const
 	{
 		Sail2DObjectPtr node = m_head_node;
 		while (node)

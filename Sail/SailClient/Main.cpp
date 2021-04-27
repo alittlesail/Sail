@@ -67,11 +67,20 @@ sapp_desc sokol_main(int argc, char* argv[])
 
 #define CARP_DUMP_IMPL
 #include "Carp/carp_dump.hpp"
+#undef CARP_DUMP_IMPL
+
 #define CARP_LOG_IMPL
 #include "Carp/carp_log.hpp"
+#undef CARP_LOG_IMPL
+
 #define SAIL_SCHEDULE_IMPL
 #include "sail_schedule.hpp"
+#undef SAIL_SCHEDULE_IMPL
+
 #define SAIL_UI_LAYER_IMPL
 #include "Sail/SailClient/UI/sail_ui_layer.hpp"
+#undef SAIL_UI_LAYER_IMPL
+
 #define SAIL_UI_SYSTEM_IMPL
 #include "Sail/SailClient/UI/sail_ui_system.hpp"
+#undef SAIL_UI_SYSTEM_IMPL

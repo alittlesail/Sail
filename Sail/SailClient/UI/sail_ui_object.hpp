@@ -7,6 +7,10 @@
 #include "sail_ui_event.hpp"
 #include "Sail/SailClient/2D/sail_2d_object.hpp"
 
+#ifdef GetYValue
+#undef GetYValue
+#endif
+
 enum class SailUIPosType
 {
     POS_ABS = 1,
@@ -25,6 +29,8 @@ enum class SailUISizeType
     SIZE_ABS = 1,
     SIZE_PERCENT = 2,
     SIZE_MARGIN = 4, // 相对于父控件大小减去一定值
+
+    SIZE_PERCENT_MAX_VALUE = std::numeric_limits<int>::max(),
 };
 
 class SailUIObjectUserData
@@ -40,6 +46,7 @@ class SailUIObject : public std::enable_shared_from_this<SailUIObject>
 {
 public:
     friend class SailUISystem;
+    friend class SailUIObjects;
 
 public:
     virtual ~SailUIObject() {}
@@ -139,30 +146,45 @@ public:
         // System_SetNormalCursor();
     }
 
-    protected:
+protected:
     bool m_hand_cursor = false; // 鼠标移入时，是否变成手势
 
 public:
     Sail2DObjectPtr GetNativeShow() const { return m_show; }
 
+    // 文本控件相关接口
+public:
     virtual const std::string& GetText() { static std::string empty; return empty; }
     virtual void SetText(const std::string& value) {}
 
+    // 选择控件相关接口
+public:
     virtual bool GetSelected() { return false; }
     virtual void SetSelected(bool value) { }
 
+    // 复核控件相关接口
 public:
-    virtual const std::vector<SailUIObjectPtr>& GetChildren() { static std::vector<SailUIObjectPtr> empty;  return empty; }
-    virtual int GetChildCount() { return 0; }
+    virtual const std::vector<SailUIObjectPtr>& GetChildren() const { static std::vector<SailUIObjectPtr> empty;  return empty; }
+    virtual int GetChildCount() const { return 0; }
+    virtual int GetChildIndex(const SailUIObjectPtr& child) const { return -1; }
+    virtual SailUIObjectPtr GetChildByIndex(int index) const { return nullptr; }
     virtual bool SetChildIndex(const SailUIObjectPtr& object, int index) { return false; }
     virtual bool AddChild(const SailUIObjectPtr& object, int index = -1) { return false; }
     virtual bool RemoveChild(const SailUIObjectPtr& object) { return false; }
-    virtual bool SpliceChild(int index, int count = -1) { return false; }
+    virtual int SpliceChild(int index, int count = -1) { return 0; }
     virtual void RemoveAllChild() {}
 
+    // 编辑控件相关接口
 public:
-    bool IsFocus() const { return m_focus; }
+    virtual bool GetEditable() const { return false; }
+    virtual int GetFontSize() const { return 0; }
+    virtual int GetCursorX() const { return 0; }
+    virtual int GetCursorY() const { return 0; }
     virtual bool IsInput() const { return false; }
+
+public:
+    bool IsFocus() const;
+    void SetFocus(bool value);
 
 public:
     void SetCanScroll(bool value) { m_can_scroll = value; }
@@ -175,6 +197,10 @@ public:
     bool GetClip() const { return m_clip; }
     void SetIgnore(bool value) { m_ignore = value; }
     bool GetIgnore() const { return m_ignore; }
+
+public:
+    // 检查鼠标是否在当前控件范围内
+    bool IsMouseIn();
 
 public:
     // 当前控件，相对于窗口的坐标，不考虑旋转
@@ -222,12 +248,12 @@ public:
             const size_t cur_index = list.size() - 1 - index;
             const auto& object = list[cur_index];
             CarpMatrix2D m;
-            if (cur_index == 0) m.Scale(object->GetWidth(), object->GetHeight());
-            m.Translation(-object->GetCenterX(), -object->GetCenterY());
-            m.Rotate(object->GetAngle());
-            m.Translation(object->GetCenterX(), object->GetCenterY());
+            if (cur_index == 0) m.Scale(static_cast<float>(object->GetWidth()), static_cast<float>(object->GetHeight()));
+            m.Translation(static_cast<float>(-object->GetCenterX()), static_cast<float>(-object->GetCenterY()));
+            m.Rotate(object->GetRotate());
+            m.Translation(static_cast<float>(object->GetCenterX()), static_cast<float>(object->GetCenterY()));
             m.Scale(object->GetScaleX(), object->GetScaleY());
-            m.Translation(object->GetX(), object->GetY());
+            m.Translation(static_cast<float>(object->GetX()), static_cast<float>(object->GetY()));
 
             m.Multiply(result);
             result = m;
@@ -288,6 +314,8 @@ public:
         if (logic_parent) return logic_parent;
         return m_show_parent.lock();
     }
+    SailUIObjectPtr GetShowParent() const { return m_show_parent.lock(); }
+    SailUIObjectPtr GetLogicParent() const { return m_logic_parent.lock(); }
 
 protected:
 	SailUIObjectWeakPtr m_show_parent;	// 显示级父控件，最直接的父控件
@@ -313,6 +341,7 @@ public:
     int GetXValue() const { return m_x_value; }
     void SetXValue(int value)
     {
+        if (m_x_value == value) return;
         m_x_value = value;
         auto parent = m_show_parent.lock();
         if (parent) parent->UpdateXLayout(std::enable_shared_from_this<SailUIObject>::shared_from_this());
@@ -321,6 +350,7 @@ public:
     int GetY() const { return m_y; }
     void SetY(int value)
     {
+        if (m_y == value) return;
         m_y = value;
         if (m_y_type == SailUIPosType::POS_ABS) m_y_value = value;
         m_show->SetY(static_cast<int>(floor(m_y)));
@@ -336,6 +366,7 @@ public:
     int GetYValue() const { return m_y_value; }
     void SetYValue(int value)
     {
+        if (m_y_value == value) return;
         m_y_value = value;
         auto parent = m_show_parent.lock();
         if (parent) parent->UpdateYLayout(std::enable_shared_from_this<SailUIObject>::shared_from_this());
@@ -453,7 +484,7 @@ public:
         parent->UpdateYLayout(std::enable_shared_from_this<SailUIObject>::shared_from_this());
     }
 
-    void PickUp(int x, int y, SailUIObjectPtr& out_pick, int& out_x, int& out_y)
+    virtual void PickUp(int x, int y, SailUIObjectPtr& out_pick, int& out_x, int& out_y)
     {
         // 检查是否被禁用，是否可见
         if (m_ignore || m_abs_disabled || m_abs_visible == false)
@@ -465,30 +496,30 @@ public:
         }
 
         // 计算出相对于控件的点
-        auto xx = x - m_x;
-        auto yy = y - m_y;
+        float xx = static_cast<float>(x - m_x);
+        float yy = static_cast<float>(y - m_y);
 
         // 处理旋转
-        if (m_angle != 0)
+        if (m_rotate != 0)
         {
             // 逆旋转
-            auto rad = -m_angle;
-            auto cos = std::cosf(rad);
-            auto sin = std::sinf(rad);
-            auto xxx = xx * cos + yy * -sin;
-            auto yyy = xx * sin + yy * cos;
+            const auto rad = -m_rotate;
+            const auto cos = std::cosf(rad);
+            const auto sin = std::sinf(rad);
+            const auto xxx = xx * cos + yy * -sin;
+            const auto yyy = xx * sin + yy * cos;
 
             xx = xxx;
             yy = yyy;
         }
 
         // 处理缩放
-        if (m_scale_x > 0) xx /= m_scale_x;
-        if (m_scale_y > 0) yy /= m_scale_y;
+        if (m_scale_x != 0) xx /= m_scale_x;
+        if (m_scale_y != 0) yy /= m_scale_y;
 
         // 移动到原来的位置
-        const auto rel_x = xx + m_center_x;
-        const auto rel_y = yy + m_center_y;
+        const auto rel_x = static_cast<int>(xx) + m_center_x;
+        const auto rel_y = static_cast<int>(yy) + m_center_y;
 
         if (m_scale_x <= 0 || m_scale_y <= 0)
         {
@@ -516,7 +547,7 @@ public:
         }
             
         // 检查位置是否在控件范围内
-        if (m_pickup_rect && rel_x >= 0 && rel_y >= 0 && rel_x < m_width && rel_y < m_height)
+        if (rel_x >= 0 && rel_y >= 0 && rel_x < m_width && rel_y < m_height)
         {
             out_pick = std::enable_shared_from_this<SailUIObject>::shared_from_this();
             out_x = rel_x;
@@ -532,30 +563,30 @@ public:
     void PickUpSelf(int x, int y, SailUIObjectPtr& out_pick, int& out_x, int& out_y)
     {
         // 计算出相对于控件的点
-        auto xx = x - m_x;
-        auto yy = y - m_y;
+        auto xx = static_cast<float>(x - m_x);
+        auto yy = static_cast<float>(y - m_y);
 
         // 处理旋转
-        if (m_angle != 0)
+        if (m_rotate != 0)
         {
             // 逆旋转
-            auto rad = -m_angle;
-            auto cos = std::cosf(rad);
-            auto sin = std::sinf(rad);
-            auto xxx = xx * cos + yy * -sin;
-            auto yyy = xx * sin + yy * cos;
+            const auto rad = -m_rotate;
+            const auto cos = std::cosf(rad);
+            const auto sin = std::sinf(rad);
+            const auto xxx = xx * cos + yy * -sin;
+            const auto yyy = xx * sin + yy * cos;
 
             xx = xxx;
             yy = yyy;
         }
 
         // 处理缩放
-        if (m_scale_x > 0) xx /= m_scale_x;
-        if (m_scale_y > 0) yy /= m_scale_y;
+        if (m_scale_x != 0) xx /= m_scale_x;
+        if (m_scale_y != 0) yy /= m_scale_y;
 
         // 移动到原来的位置
-        auto rel_x = xx + m_center_x;
-        auto rel_y = yy + m_center_y;
+        const auto rel_x = static_cast<int>(xx) + m_center_x;
+        const auto rel_y = static_cast<int>(yy) + m_center_y;
 
         if (m_scale_x <= 0 || m_scale_y <= 0)
         {
@@ -596,29 +627,29 @@ public:
     virtual void UpdateYLayout(const SailUIObjectPtr& object) {}
 
 protected:
-    int m_width = 0.0;		// 宽度
-    int m_height = 0.0;		// 高度
+    int m_width = 0;		// 宽度
+    int m_height = 0;		// 高度
     SailUISizeType m_width_type = SailUISizeType::SIZE_ABS;    // 绝对宽度
-    int m_width_value = 0.0; // 宽度类型值
+    int m_width_value = 0; // 宽度类型值
     SailUISizeType m_height_type = SailUISizeType::SIZE_ABS;    // 绝对高度
-    int m_height_value = 0.0; // 高度类型值
+    int m_height_value = 0; // 高度类型值
 
 public:
     float GetScaleX() const { return m_scale_x; }
     void SetScaleX(float value) { m_scale_x = value; m_show->SetScaleX(m_scale_x); }
     float GetScaleY() const { return m_scale_y; }
     void SetScaleY(float value) { m_scale_y = value; m_show->SetScaleY(m_scale_y); }
-    float GetAngle() const { return m_angle; }
-    void SetAngle(float value) { m_angle = value; m_show->SetAngle(m_angle); }
+    float GetRotate() const { return m_rotate; }
+    void SetRotate(float value) { m_rotate = value; m_show->SetRotate(m_rotate); }
     int GetCenterX() const { return m_center_x; }
-    void SetCenterX(int value) { m_center_x = value; m_show->SetCenterX(m_center_x); }
+    void SetCenterX(int value) { if (m_center_x == value) return; m_center_x = value; m_show->SetCenterX(m_center_x); }
     int GetCenterY() const { return m_center_y; }
-    void SetCenterY(int value) { m_center_y = value; m_show->SetCenterY(m_center_y); }
+    void SetCenterY(int value) { if (m_center_y == value) return; m_center_y = value; m_show->SetCenterY(m_center_y); }
 
 protected:
-    float m_scale_x = 1.0;              // 宽度缩放
-    float m_scale_y = 1.0;              // 高度缩放
-    float m_angle = 0.0;                // 旋转角度
+    float m_scale_x = 1.0;          // 宽度缩放
+    float m_scale_y = 1.0;          // 高度缩放
+    float m_rotate = 0.0;           // 旋转弧度
     int m_center_x = 0;             // 旋转中心
     int m_center_y = 0;             // 旋转中心
 
@@ -637,15 +668,18 @@ protected:
 
 public:
     float GetAlpha() const { return m_alpha; }
-    float GetAbsAlpha() const { return m_abs_alpha; }
     void SetAlpha(float value)
     {
         m_alpha = value;
+        UpdateAlpha();
+    }
+    virtual void UpdateAlpha()
+    {
         const auto parent = m_show_parent.lock();
         if (parent)
-            m_abs_alpha = parent->m_abs_alpha * value;
+            m_abs_alpha = parent->m_abs_alpha * m_alpha;
         else
-            m_abs_alpha = value;
+            m_abs_alpha = m_alpha;
         m_show->SetAlpha(m_abs_alpha);
     }
 
@@ -655,17 +689,8 @@ protected:
 
 public:
     bool GetVisible() const { return m_visible; }
-    bool GetAbsVisible() const { return m_abs_visible; }
-    void SetVisible(bool value)
-    {
-        m_visible = value;
-        const auto parent = m_show_parent.lock();
-        if (parent)
-            m_abs_visible = parent->m_abs_visible && value;
-        else
-            m_abs_visible = value;
-        m_show->SetVisible(m_abs_visible);
-    }
+    void SetVisible(bool value);
+    virtual void UpdateVisible();
 
 protected:
     bool m_visible = true;      // 显示
@@ -673,24 +698,14 @@ protected:
 
 public:
     bool GetDisabled() const { return m_disabled; }
-    bool GetAbsDisabled() const { return m_abs_disabled; }
-    void SetDisabled(bool value)
-    {
-        m_disabled = value;
-        const auto parent = m_show_parent.lock();
-        if (parent)
-            m_abs_disabled = parent->m_abs_disabled || value;
-        else
-            m_abs_disabled = value;
-    }
+    void SetDisabled(bool value);
+    virtual void UpdateDisabled();
 
 protected:
     bool m_disabled = false;    // 控件是否禁用
-    bool m_focus = false;       // 当前是否是焦点
 
 protected:
     bool m_modal = false;           // 是否是模态控件
-    bool m_pickup_rect = true;      // 拾取的时候是否判断矩形区域
     bool m_pickup_child = false;    // 是否拾取子控件
     bool m_pickup_this = false;     // 是否拾取自己
     bool m_can_scroll = false;      // 是否是滚动控件

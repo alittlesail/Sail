@@ -20,6 +20,7 @@ using SailUIEventListenerWeakPtr = std::weak_ptr<SailUIEventListener>;
 class SailUIEvent
 {
 public:
+    virtual ~SailUIEvent() {}
     SailUIObjectPtr target;
 };
 
@@ -137,12 +138,12 @@ class SailUIButtonDragEvent final : public SailUIEvent
 {
 public: static size_t Value() { return static_cast<size_t>(SailUIEventType::BUTTON_DRAG); }
 
-    double rel_x = 0.0;
-    double rel_y = 0.0;
-    double delta_x = 0.0;
-    double delta_y = 0.0;
-    double abs_x = 0.0;
-    double abs_y = 0.0;
+    int rel_x = 0;
+    int rel_y = 0;
+    int delta_x = 0;
+    int delta_y = 0;
+    int abs_x = 0;
+    int abs_y = 0;
 };
 
 // 拖拽开始
@@ -150,67 +151,67 @@ class SailUIButtonDragBeginEvent final : public SailUIEvent
 {
 public: static size_t Value() { return static_cast<size_t>(SailUIEventType::BUTTON_DRAG_BEGIN); }
 
-    double rel_x = 0.0;
-    double rel_y = 0.0;
-    double delta_x = 0.0;
-    double delta_y = 0.0;
-    double abs_x = 0.0;
-    double abs_y = 0.0;
+    int rel_x = 0;
+    int rel_y = 0;
+    int delta_x = 0;
+    int delta_y = 0;
+    int abs_x = 0;
+    int abs_y = 0;
 };
 // 拖拽结束
 class SailUIButtonDragEndEvent final : public SailUIEvent
 {
 public: static size_t Value() { return static_cast<size_t>(SailUIEventType::BUTTON_DRAG_END); }
 
-    double rel_x = 0.0;
-    double rel_y = 0.0;
-    double delta_x = 0.0;
-    double delta_y = 0.0;
-    double abs_x = 0.0;
-    double abs_y = 0.0;
+    int rel_x = 0;
+    int rel_y = 0;
+    int delta_x = 0;
+    int delta_y = 0;
+    int abs_x = 0;
+    int abs_y = 0;
 };
 
-class SailUIFingerDragEvent final : public SailUIEvent
+class SailUITouchDragEvent final : public SailUIEvent
 {
 public: static size_t Value() { return static_cast<size_t>(SailUIEventType::FINGER_DRAG); }
 
-    double rel_x = 0.0;
-    double rel_y = 0.0;
-    double delta_x = 0.0;
-    double delta_y = 0.0;
-    double abs_x = 0.0;
-    double abs_y = 0.0;
-    std::string finger_key;
+    int rel_x = 0;
+    int rel_y = 0;
+    int delta_x = 0;
+    int delta_y = 0;
+    int abs_x = 0;
+    int abs_y = 0;
+    uintptr_t touch_id = 0;
     bool is_sfc = false;
 };
 
 // 拖拽开始
-class SailUIFingerDragBeginEvent final : public SailUIEvent
+class SailUITouchDragBeginEvent final : public SailUIEvent
 {
 public: static size_t Value() { return static_cast<size_t>(SailUIEventType::FINGER_DRAG_BEGIN); }
 
-    double rel_x = 0.0;
-    double rel_y = 0.0;
-    double delta_x = 0.0;
-    double delta_y = 0.0;
-    double abs_x = 0.0;
-    double abs_y = 0.0;
-    std::string finger_key;
+    int rel_x = 0;
+    int rel_y = 0;
+    int delta_x = 0;
+    int delta_y = 0;
+    int abs_x = 0;
+    int abs_y = 0;
+    uintptr_t touch_id = 0;
     bool is_sfc = false;
 };
 
 // 拖拽结束
-class SailUIFingerDragEndEvent : public SailUIEvent
+class SailUITouchDragEndEvent : public SailUIEvent
 {
 public: static size_t Value() { return static_cast<size_t>(SailUIEventType::FINGER_DRAG_END); }
 
-    double rel_x = 0.0;
-    double rel_y = 0.0;
-    double delta_x = 0.0;
-    double delta_y = 0.0;
-    double abs_x = 0.0;
-    double abs_y = 0.0;
-    std::string finger_key;
+    int rel_x = 0;
+    int rel_y = 0;
+    int delta_x = 0;
+    int delta_y = 0;
+    int abs_x = 0;
+    int abs_y = 0;
+    uintptr_t touch_id = 0;
     bool is_sfc = false;
 };
 
@@ -220,10 +221,10 @@ class SailUIDropEvent final : public SailUIEvent
 public: static size_t Value() { return static_cast<size_t>(SailUIEventType::DROP); }
 
     SailUIObjectPtr drop_target;
-    double rel_x = 0.0;
-    double rel_y = 0.0;
-    double abs_x = 0.0;
-    double abs_y = 0.0;
+    int rel_x = 0;
+    int rel_y = 0;
+    int abs_x = 0;
+    int abs_y = 0;
 };
 
 // 长按
@@ -231,10 +232,10 @@ class SailUILongButtonDownEvent final : public SailUIEvent
 {
 public: static size_t Value() { return static_cast<size_t>(SailUIEventType::LONG_BUTTON_DOWN); }
 
-    double abs_x = 0.0;
-    double abs_y = 0.0;
-    double rel_x = 0.0;
-    double rel_y = 0.0;
+    int abs_x = 0;
+    int abs_y = 0;
+    int rel_x = 0;
+    int rel_y = 0;
     int count = 0;
     bool is_drag = false;       // 是否有拖拽过
 };
@@ -243,10 +244,10 @@ class SailUILeftButtonDownEvent final : public SailUIEvent
 {
 public: static size_t Value() { return static_cast<size_t>(SailUIEventType::LEFT_BUTTON_DOWN); }
 
-    double abs_x = 0.0;
-    double abs_y = 0.0;
-    double rel_x = 0.0;
-    double rel_y = 0.0;
+    int abs_x = 0;
+    int abs_y = 0;
+    int rel_x = 0;
+    int rel_y = 0;
     int count = 0;
     bool is_drag = false;       // 是否有拖拽过
 };
@@ -255,10 +256,10 @@ class SailUILeftButtonUpEvent final : public SailUIEvent
 {
 public: static size_t Value() { return static_cast<size_t>(SailUIEventType::LEFT_BUTTON_UP); }
 
-    double abs_x = 0.0;
-    double abs_y = 0.0;
-    double rel_x = 0.0;
-    double rel_y = 0.0;
+    int abs_x = 0;
+    int abs_y = 0;
+    int rel_x = 0;
+    int rel_y = 0;
     int count = 0;
     bool is_drag = false;       // 是否有拖拽过
 };
@@ -267,10 +268,10 @@ class SailUIMiddleButtonDownEvent final : public SailUIEvent
 {
 public: static size_t Value() { return static_cast<size_t>(SailUIEventType::MIDDLE_BUTTON_DOWN); }
 
-    double abs_x = 0.0;
-    double abs_y = 0.0;
-    double rel_x = 0.0;
-    double rel_y = 0.0;
+    int abs_x = 0;
+    int abs_y = 0;
+    int rel_x = 0;
+    int rel_y = 0;
     int count = 0;
     bool is_drag = false;       // 是否有拖拽过
 };
@@ -279,10 +280,10 @@ class SailUIMiddleButtonUpEvent final : public SailUIEvent
 {
 public: static size_t Value() { return static_cast<size_t>(SailUIEventType::MIDDLE_BUTTON_UP); }
 
-    double abs_x = 0.0;
-    double abs_y = 0.0;
-    double rel_x = 0.0;
-    double rel_y = 0.0;
+    int abs_x = 0;
+    int abs_y = 0;
+    int rel_x = 0;
+    int rel_y = 0;
     int count = 0;
     bool is_drag = false;       // 是否有拖拽过
 };
@@ -291,18 +292,18 @@ class SailUIMiddleButtonWheelEvent final : public SailUIEvent
 {
 public: static size_t Value() { return static_cast<size_t>(SailUIEventType::MIDDLE_BUTTON_WHEEL); }
 
-      double delta_x = 0.0;
-      double delta_y = 0.0;
+    int delta_x = 0;
+    int delta_y = 0;
 };
 // 右键按下
 class SailUIRightButtonDownEvent final : public SailUIEvent
 {
 public: static size_t Value() { return static_cast<size_t>(SailUIEventType::RIGHT_BUTTON_DOWN); }
 
-    double abs_x = 0.0;
-    double abs_y = 0.0;
-    double rel_x = 0.0;
-    double rel_y = 0.0;
+    int abs_x = 0;
+    int abs_y = 0;
+    int rel_x = 0;
+    int rel_y = 0;
     int count = 0;
     bool is_drag = false;       // 是否有拖拽过
 };
@@ -311,37 +312,37 @@ class SailUIRightButtonUpEvent final : public SailUIEvent
 {
 public: static size_t Value() { return static_cast<size_t>(SailUIEventType::RIGHT_BUTTON_UP); }
 
-    double abs_x = 0.0;
-    double abs_y = 0.0;
-    double rel_x = 0.0;
-    double rel_y = 0.0;
+    int abs_x = 0;
+    int abs_y = 0;
+    int rel_x = 0;
+    int rel_y = 0;
     int count = 0;
     bool is_drag = false;       // 是否有拖拽过
 };
 
 // 触控按下
-class SailUIFingerDownEvent final : public SailUIEvent
+class SailUITouchDownEvent final : public SailUIEvent
 {
 public: static size_t Value() { return static_cast<size_t>(SailUIEventType::FINGER_DOWN); }
 
-    double abs_x = 0.0;
-    double abs_y = 0.0;
-    double rel_x = 0.0;
-    double rel_y = 0.0;
-    std::string finger_key;
+    int abs_x = 0;
+    int abs_y = 0;
+    int rel_x = 0;
+    int rel_y = 0;
+    uintptr_t touch_id = 0;
     bool is_sfc = false;
     bool is_drag = false;       // 是否有拖拽过
 };
 // 触控弹起
-class SailUIFingerUpEvent final : public SailUIEvent
+class SailUITouchUpEvent final : public SailUIEvent
 {
 public: static size_t Value() { return static_cast<size_t>(SailUIEventType::FINGER_UP); }
 
-    double abs_x = 0.0;
-    double abs_y = 0.0;
-    double rel_x = 0.0;
-    double rel_y = 0.0;
-    std::string finger_key;
+    int abs_x = 0;
+    int abs_y = 0;
+    int rel_x = 0;
+    int rel_y = 0;
+    uintptr_t touch_id = 0;
     bool is_sfc = false;
     bool is_drag = false;       // 是否有拖拽过
 };
@@ -371,7 +372,7 @@ public: static size_t Value() { return static_cast<size_t>(SailUIEventType::RIGH
       int count = 0;
 };
 
-class SailUIFingerClickEvent final : public SailUIEvent
+class SailUITouchClickEvent final : public SailUIEvent
 {
 public: static size_t Value() { return static_cast<size_t>(SailUIEventType::FINGER_CLICK); }
 
@@ -412,10 +413,10 @@ class SailUIMouseMoveEvent final : public SailUIEvent
 {
 public: static size_t Value() { return static_cast<size_t>(SailUIEventType::MOUSE_MOVE); }
 
-    double abs_x = 0.0;
-    double abs_y = 0.0;
-    double rel_x = 0.0;
-    double rel_y = 0.0;
+    int abs_x = 0;
+    int abs_y = 0;
+    int rel_x = 0;
+    int rel_y = 0;
 };
 
 // 系统选择文件完毕
