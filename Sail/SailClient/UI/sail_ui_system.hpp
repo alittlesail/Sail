@@ -592,6 +592,9 @@ extern SailUISystem s_sail_ui_system;
 #endif
 
 #ifdef SAIL_UI_SYSTEM_IMPL
+#ifndef SAIL_UI_SYSTEM_IMPL_INCLUDE
+#define SAIL_UI_SYSTEM_IMPL_INCLUDE
 SailUISystem s_sail_ui_system;
+#endif
 #endif
 

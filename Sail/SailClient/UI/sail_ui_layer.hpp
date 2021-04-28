@@ -214,6 +214,9 @@ extern SailUILayer s_sail_ui_layer;
 #endif
 
 #ifdef SAIL_UI_LAYER_IMPL
+#ifndef SAIL_UI_LAYER_IMPL_INCLUDE
+#define SAIL_UI_LAYER_IMPL_INCLUDE
 SailUILayer s_sail_ui_layer;
+#endif
 #endif
 

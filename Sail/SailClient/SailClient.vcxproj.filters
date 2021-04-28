@@ -237,5 +237,8 @@
     <ClInclude Include="UI\sail_ui_objects.hpp">
       <Filter>Sail\UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Carp\carp_event_consumer.hpp">
+      <Filter>Carp</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
