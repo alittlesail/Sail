@@ -28,6 +28,9 @@
     <Filter Include="Sail\UI">
       <UniqueIdentifier>{b77de6bc-fdbf-4f72-a122-1f20cdf298d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sail\Gfx">
+      <UniqueIdentifier>{5e20d951-7f89-4d01-89bc-4f7e48e4e12a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Carp\carp_file_bind.hpp">
@@ -239,6 +242,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Carp\carp_event_consumer.hpp">
       <Filter>Carp</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\sail_gfx.hpp">
+      <Filter>Sail\Gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="2D\sail_2d_image.hpp">
+      <Filter>Sail\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="2D\sail_2d_quad.hpp">
+      <Filter>Sail\2D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -3,7 +3,6 @@
 
 #include <memory>
 
-#include "sokol/sokol_gfx.h"
 #include "Carp/carp_math_2d.hpp"
 
 class Sail2DObject;
@@ -48,10 +47,10 @@ public:
 	virtual void SetCenterY(int y) { if (m_center_y == y) return; m_center_y = y; m_self_matrix_dirty = true; }
 
 	// 设置颜色
-	virtual void SetRed(float red) { m_red = red; }
-	virtual void SetGreen(float green) { m_green = green; }
-	virtual void SetBlue(float blue) { m_blue = blue; }
-	virtual void SetAlpha(float alpha) { m_alpha = alpha; }
+	virtual void SetRed(float red) { m_red = red; m_color_dirty = true; }
+	virtual void SetGreen(float green) { m_green = green; m_color_dirty = true; }
+	virtual void SetBlue(float blue) { m_blue = blue; m_color_dirty = true; }
+	virtual void SetAlpha(float alpha) { m_alpha = alpha; m_color_dirty = true; }
 
 public:
 	// 设置本地坐标为脏
@@ -103,6 +102,8 @@ public:
 	virtual void UpdateTextureCoordinate() {}
 	// 更新顶点坐标
 	virtual void UpdateVertexCoordinate() {}
+	// 更新颜色
+	virtual void UpdateVertexColor() {}
 
 protected:
 	bool m_visible = true;				// 是否显示
@@ -125,6 +126,7 @@ protected:
 	CarpMatrix2D m_global_matrix;		// 保存世界矩阵
 	bool m_vertex_dirty = true;			// 标脏顶点坐标
 	bool m_texture_dirty = true;		// 标脏纹理
+	bool m_color_dirty = true;			// 标脏颜色
 
 public:
 	Sail2DObjectWeakPtr m_front_node;	// 前一个兄弟节点

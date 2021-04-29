@@ -7,6 +7,7 @@
 
 #include "sokol/sokol_app.h"
 #include "sail_schedule.hpp"
+#include "Sail/SailClient/gfx/sail_gfx.hpp"
 
 #include <vector>
 #include <string>
@@ -52,13 +53,13 @@ sapp_desc sokol_main(int argc, char* argv[])
     desc.frame_cb = SokolFrame;
     desc.cleanup_cb = SokolCleanUp;
     desc.event_cb = SokolEvent;
+    desc.win32_console_create = true;
     return desc;
 }
 
 #define SOKOL_LOG(msg) CARP_INFO(msg)
 
 #define SOKOL_IMPL
-#define SOKOL_D3D11
 #include "sokol/sokol_app.h"
 #define SOKOL_GFX_IMPL
 #include "sokol/sokol_gfx.h"
@@ -67,20 +68,13 @@ sapp_desc sokol_main(int argc, char* argv[])
 
 #define CARP_DUMP_IMPL
 #include "Carp/carp_dump.hpp"
-#undef CARP_DUMP_IMPL
-
 #define CARP_LOG_IMPL
 #include "Carp/carp_log.hpp"
-#undef CARP_LOG_IMPL
-
 #define SAIL_SCHEDULE_IMPL
 #include "sail_schedule.hpp"
-#undef SAIL_SCHEDULE_IMPL
-
 #define SAIL_UI_LAYER_IMPL
 #include "Sail/SailClient/UI/sail_ui_layer.hpp"
-#undef SAIL_UI_LAYER_IMPL
-
 #define SAIL_UI_SYSTEM_IMPL
 #include "Sail/SailClient/UI/sail_ui_system.hpp"
-#undef SAIL_UI_SYSTEM_IMPL
+#define SAIL_GFX_IMPL
+#include "Sail/SailClient/Gfx/sail_gfx.hpp"

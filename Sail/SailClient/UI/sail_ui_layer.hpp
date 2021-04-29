@@ -116,6 +116,12 @@ public:
 public:
 	void HandleViewResized(int width, int height)
 	{
+		if (width > 0 && height > 0)
+		{
+			m_root.Scale(1.0f / static_cast<float>(width), -1.0f / static_cast<float>(height));
+			m_root.Translation(-1, 1);
+		}
+
 	    for (auto& layer : m_normal_groups)
 	    {
 			layer->SetWidth(width);
@@ -207,6 +213,9 @@ private:
 	SailUIObjectsPtr m_right_layer;
 	SailUIObjectPtr m_right_show;
 	SailUIObjectsPtr m_tip_layer;
+
+private:
+	CarpMatrix2D m_root;
 };
 
 extern SailUILayer s_sail_ui_layer;

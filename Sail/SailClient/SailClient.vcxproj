@@ -81,8 +81,11 @@
     <ClInclude Include="..\..\sokol\sokol_gfx.h" />
     <ClInclude Include="..\..\sokol\sokol_glue.h" />
     <ClInclude Include="..\..\sokol\sokol_time.h" />
+    <ClInclude Include="2D\sail_2d_image.hpp" />
     <ClInclude Include="2D\sail_2d_object.hpp" />
     <ClInclude Include="2D\sail_2d_objects.hpp" />
+    <ClInclude Include="2D\sail_2d_quad.hpp" />
+    <ClInclude Include="Gfx\sail_gfx.hpp" />
     <ClInclude Include="sail_schedule.hpp" />
     <ClInclude Include="UI\sail_ui_event.hpp" />
     <ClInclude Include="UI\sail_ui_layer.hpp" />

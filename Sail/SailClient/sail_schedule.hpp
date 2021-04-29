@@ -3,8 +3,11 @@
 
 #include <string>
 
+
+#include "2D/sail_2d_quad.hpp"
 #include "Sail/SailClient/UI/sail_ui_layer.hpp"
 #include "Sail/SailClient/UI/sail_ui_system.hpp"
+#include "Sail/SailClient/Gfx/sail_gfx.hpp"
 
 #include "Carp/carp_dump.hpp"
 #include "Carp/carp_log.hpp"
@@ -46,10 +49,30 @@ public:
 		desc.context = sapp_sgcontext();
 		sg_setup(&desc);
 
+		// 打印落地
+		auto backend = sg_query_backend();
+		if (backend == SG_BACKEND_GLCORE33) CARP_INFO("backend:SG_BACKEND_GLCORE33");
+		else if (backend == SG_BACKEND_GLES2) CARP_INFO("backend:SG_BACKEND_GLES2");
+		else if (backend == SG_BACKEND_GLES3) CARP_INFO("backend:SG_BACKEND_GLES3");
+		else if (backend == SG_BACKEND_D3D11) CARP_INFO("backend:SG_BACKEND_D3D11");
+		else if (backend == SG_BACKEND_METAL_IOS) CARP_INFO("backend:SG_BACKEND_METAL_IOS");
+		else if (backend == SG_BACKEND_METAL_MACOS) CARP_INFO("backend:SG_BACKEND_METAL_MACOS");
+		else if (backend == SG_BACKEND_METAL_SIMULATOR) CARP_INFO("backend:SG_BACKEND_METAL_SIMULATOR");
+		else if (backend == SG_BACKEND_WGPU) CARP_INFO("backend:SG_BACKEND_WGPU");
+		else if (backend == SG_BACKEND_WGPU) CARP_INFO("backend:SG_BACKEND_DUMMY");
+		else CARP_INFO("backend:unknown");
+
 		// 初始化默认通道
 		memset(&m_pass_action, 0, sizeof(m_pass_action));
 		m_pass_action.colors[0].action = SG_ACTION_CLEAR;
 		m_pass_action.colors[0].value = { 0.0f, 0.0f, 0.0f, 1.0f };
+
+		m_quad = std::make_shared<Sail2DQuad>();
+		m_quad->SetWidth(100);
+		m_quad->SetHeight(100);
+		// m_quad->SetGreen(0);
+
+		s_sail_ui_system.HandleViewResized(sapp_width(), sapp_height());
 
 		// 初始化时间
 		m_current_time = CarpTime::GetCurMSTime();
@@ -58,6 +81,8 @@ public:
 
 	void Shutdown()
 	{
+		s_sail_gfx_2d_batch_render.Clear();
+
 		// 释放渲染
 		sg_shutdown();
 
@@ -140,6 +165,7 @@ public:
 		sg_begin_default_pass(&m_pass_action, sapp_width(), sapp_height());
 
 		s_sail_ui_layer.Render();
+		s_sail_gfx_2d_batch_render.Flush();
 
 		// 提交变更
 		sg_end_pass();
@@ -167,6 +193,8 @@ private:
 private:
 	// 默认通道
 	sg_pass_action m_pass_action = {};
+
+	std::shared_ptr<Sail2DQuad> m_quad;
 };
 
 extern SailSchedule s_sail_schedule;
