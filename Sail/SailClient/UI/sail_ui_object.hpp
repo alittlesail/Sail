@@ -5,6 +5,7 @@
 
 #include "Carp/carp_event_dispatcher.hpp"
 #include "sail_ui_event.hpp"
+#include "sail_ui_texture.hpp"
 #include "Sail/SailClient/2D/sail_2d_object.hpp"
 
 #ifdef GetYValue
@@ -48,6 +49,7 @@ public:
     friend class SailUISystem;
     friend class SailUIObjects;
     friend class SailUIObject;
+    friend class SailUITextureSystem;
 
 public:
     virtual ~SailUIObject() {}
@@ -331,6 +333,10 @@ public:
 protected:
 	SailUIObjectWeakPtr m_show_parent;	// 显示级父控件，最直接的父控件
 	SailUIObjectWeakPtr m_logic_parent;	// 逻辑级父控件，用于跳级管理
+
+private:
+    virtual void SetTextureCoordinate(float top, float bottom, float left, float right) { }
+    virtual void SetTexture(const SailUITexturePtr& texture) {}
 
 public:
     int GetX() const { return m_x; }

@@ -131,6 +131,8 @@ public:
             return;
         }
 
+        if (m_size == 0) return;
+
         if (m_buffer.id != SG_INVALID_ID && m_buffer_size < m_size)
         {
             sg_destroy_buffer(m_buffer);

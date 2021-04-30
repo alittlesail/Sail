@@ -255,5 +255,17 @@
     <ClInclude Include="UI\sail_ui_quad.hpp">
       <Filter>Sail\UI</Filter>
     </ClInclude>
+    <ClInclude Include="UI\sail_ui_image.hpp">
+      <Filter>Sail\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\sail_ui_texture.hpp">
+      <Filter>Sail\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\sail_ui_texture_system.hpp">
+      <Filter>Sail\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="sail_resource.hpp">
+      <Filter>Sail</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

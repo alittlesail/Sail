@@ -3,7 +3,6 @@
 
 #include <string>
 
-
 #include "2D/sail_2d_quad.hpp"
 #include "Sail/SailClient/UI/sail_ui_layer.hpp"
 #include "Sail/SailClient/UI/sail_ui_system.hpp"
@@ -17,6 +16,7 @@
 #include "sokol/sokol_gfx.h"
 #include "sokol/sokol_glue.h"
 #include "UI/sail_ui_quad.hpp"
+#include "UI/sail_ui_image.hpp"
 
 class Application;
 
@@ -66,23 +66,37 @@ public:
 
 		s_sail_ui_system.HandleViewResized(sapp_width(), sapp_height());
 
-		auto container = SailUIObject::CreateUI<SailUIObjects>();
-		auto dialog = SailUIObject::CreateUI<SailUIObjects>();
-		container->AddChild(dialog);
-		auto quad = SailUIObject::CreateUI<SailUIQuad>();
-		quad->SetWidth(100);
-		quad->SetHeight(100);
-		dialog->AddChild(quad);
-		s_sail_ui_layer.AddLayer(container);
-
 		// 初始化时间
 		m_current_time = CarpTime::GetCurMSTime();
 		m_last_time = m_current_time;
 	}
 
+	void Test()
+	{
+
+		auto container = SailUIObject::CreateUI<SailUIObjects>();
+		auto dialog = SailUIObject::CreateUI<SailUIObjects>();
+		container->AddChild(dialog);
+		// auto quad = SailUIObject::CreateUI<SailUIQuad>();
+		// quad->SetWidth(100);
+		// quad->SetHeight(100);
+		// dialog->AddChild(quad);
+
+		auto image = SailUIObject::CreateUI<SailUIImage>();
+		image->SetX(100);
+		image->SetWidth(100);
+		image->SetHeight(100);
+		image->SetTexturePath("baboon.png");
+		dialog->AddChild(image);
+		s_sail_ui_layer.AddLayer(container);
+
+	}
+
 	void Shutdown()
 	{
 		s_sail_gfx_2d_batch_render.Clear();
+		s_sail_ui_texture_system.Shutdown();
+		s_sail_ui_layer.Shutdown();
 
 		// 释放渲染
 		sg_shutdown();

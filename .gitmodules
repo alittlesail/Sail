@@ -13,3 +13,6 @@
 [submodule "kcp"]
 	path = kcp
 	url = https://github.com/skywind3000/kcp.git
+[submodule "rapidjson"]
+	path = rapidjson
+	url = https://github.com/Tencent/rapidjson.git

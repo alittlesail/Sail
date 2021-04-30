@@ -14,6 +14,14 @@ public:
 		m_tip_layer = std::make_shared<SailUIObjects>();
 	}
 
+	void Shutdown()
+	{
+		m_normal_groups.clear();
+		m_modal_layer = nullptr;
+		m_right_layer = nullptr;
+		m_tip_layer = nullptr;
+	}
+
 public:
 	void AddLayer(const SailUIObjectsPtr& layer)
 	{
