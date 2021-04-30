@@ -16,10 +16,7 @@
 
 #include "sokol/sokol_gfx.h"
 #include "sokol/sokol_glue.h"
-
-#ifdef __EMSCRIPTEN__
-#include "emscripten.h"
-#endif
+#include "UI/sail_ui_quad.hpp"
 
 class Application;
 
@@ -50,7 +47,7 @@ public:
 		sg_setup(&desc);
 
 		// 打印落地
-		auto backend = sg_query_backend();
+		const auto backend = sg_query_backend();
 		if (backend == SG_BACKEND_GLCORE33) CARP_INFO("backend:SG_BACKEND_GLCORE33");
 		else if (backend == SG_BACKEND_GLES2) CARP_INFO("backend:SG_BACKEND_GLES2");
 		else if (backend == SG_BACKEND_GLES3) CARP_INFO("backend:SG_BACKEND_GLES3");
@@ -67,12 +64,16 @@ public:
 		m_pass_action.colors[0].action = SG_ACTION_CLEAR;
 		m_pass_action.colors[0].value = { 0.0f, 0.0f, 0.0f, 1.0f };
 
-		m_quad = std::make_shared<Sail2DQuad>();
-		m_quad->SetWidth(100);
-		m_quad->SetHeight(100);
-		// m_quad->SetGreen(0);
-
 		s_sail_ui_system.HandleViewResized(sapp_width(), sapp_height());
+
+		auto container = SailUIObject::CreateUI<SailUIObjects>();
+		auto dialog = SailUIObject::CreateUI<SailUIObjects>();
+		container->AddChild(dialog);
+		auto quad = SailUIObject::CreateUI<SailUIQuad>();
+		quad->SetWidth(100);
+		quad->SetHeight(100);
+		dialog->AddChild(quad);
+		s_sail_ui_layer.AddLayer(container);
 
 		// 初始化时间
 		m_current_time = CarpTime::GetCurMSTime();
@@ -157,7 +158,7 @@ public:
 		// 获取当前时间
 		m_current_time = CarpTime::GetCurMSTime();
 		// 计算间隔时间
-		auto interval = m_current_time - m_last_time;
+		const auto interval = m_current_time - m_last_time;
 		// 保存时间
 		m_last_time = m_current_time;
 
@@ -193,8 +194,6 @@ private:
 private:
 	// 默认通道
 	sg_pass_action m_pass_action = {};
-
-	std::shared_ptr<Sail2DQuad> m_quad;
 };
 
 extern SailSchedule s_sail_schedule;

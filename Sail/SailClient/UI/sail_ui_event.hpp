@@ -8,7 +8,7 @@ class SailUIObject;
 using SailUIObjectPtr = std::shared_ptr<SailUIObject>;
 using SailUIObjectWeakPtr = std::weak_ptr<SailUIObject>;
 
-class SailUIEventListener : public std::enable_shared_from_this<SailUIEventListener>
+class SailUIEventListener
 {
 public:
     virtual ~SailUIEventListener() {}
@@ -329,6 +329,7 @@ public: static size_t Value() { return static_cast<size_t>(SailUIEventType::FING
     int abs_y = 0;
     int rel_x = 0;
     int rel_y = 0;
+    int count = 0;
     uintptr_t touch_id = 0;
     bool is_sfc = false;
     bool is_drag = false;       // 是否有拖拽过
@@ -342,6 +343,7 @@ public: static size_t Value() { return static_cast<size_t>(SailUIEventType::FING
     int abs_y = 0;
     int rel_x = 0;
     int rel_y = 0;
+    int count = 0;
     uintptr_t touch_id = 0;
     bool is_sfc = false;
     bool is_drag = false;       // 是否有拖拽过

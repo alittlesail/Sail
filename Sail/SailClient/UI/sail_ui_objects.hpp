@@ -25,7 +25,7 @@ public:
 public:
     int GetChildIndex(const SailUIObjectPtr& child) const override
     {
-        const auto self = std::enable_shared_from_this<SailUIObject>::shared_from_this();
+        const auto self = shared_from_this();
         if (child == nullptr || child == self) return -1;
 
         const auto show_parent = child->m_show_parent.lock();
@@ -71,7 +71,7 @@ public:
 
     bool AddChild(const SailUIObjectPtr& child, int index = -1) override
     {
-        const auto self = std::enable_shared_from_this<SailUIObject>::shared_from_this();
+        const auto self = shared_from_this();
         if (child == nullptr || child == self) return false;
 
         auto show_parent = child->m_show_parent.lock();
@@ -109,7 +109,7 @@ public:
     {
         if (child == nullptr) return false;
 
-        const auto self = std::enable_shared_from_this<SailUIObject>::shared_from_this();
+        const auto self = shared_from_this();
         const auto show_parent = child->m_show_parent.lock();
         const auto logic_parent = child->m_logic_parent.lock();
         if (show_parent != self && logic_parent != self) return false;
@@ -231,7 +231,7 @@ public:
         {
             if (m_modal)
             {
-                out_pick = std::enable_shared_from_this<SailUIObject>::shared_from_this();
+                out_pick = shared_from_this();
                 out_x = rel_x;
                 out_y = rel_y;
                 return;
@@ -244,18 +244,18 @@ public:
         }
 
         // 检查位置是否在控件范围内
-        if (rel_x >= 0 && rel_y >= 0 && rel_x < m_width && rel_y < m_height)
+        if (rel_x < 0 || rel_y < 0 || rel_x >= GetWidth() && rel_y >= GetHeight())
         {
             // 如果是模态则直接返回自己
             if (m_modal)
             {
-                out_pick = std::enable_shared_from_this<SailUIObject>::shared_from_this();
+                out_pick = shared_from_this();
                 out_x = rel_x;
                 out_y = rel_y;
                 return;
             }
 
-            out_pick = std::enable_shared_from_this<SailUIObject>::shared_from_this();
+            out_pick = shared_from_this();
             out_x = rel_x;
             out_y = rel_y;
             return;
@@ -279,7 +279,7 @@ public:
 
         if (m_modal || m_pickup_child == false || m_pickup_this)
         {
-            out_pick = std::enable_shared_from_this<SailUIObject>::shared_from_this();
+            out_pick = shared_from_this();
             out_x = rel_x;
             out_y = rel_y;
             return;
@@ -327,7 +327,7 @@ public:
 
     void UpdateXLayout(const SailUIObjectPtr& child) override
     {
-        if (child == nullptr || child->m_show_parent.lock() != std::enable_shared_from_this<SailUIObject>::shared_from_this())
+        if (child == nullptr || child->m_show_parent.lock() != shared_from_this())
             return;
 
         const auto x_type = child->m_x_type;
@@ -353,7 +353,7 @@ public:
 
     void UpdateYLayout(const SailUIObjectPtr& child) override
     {
-        if (child == nullptr || child->m_show_parent.lock() != std::enable_shared_from_this<SailUIObject>::shared_from_this())
+        if (child == nullptr || child->m_show_parent.lock() != shared_from_this())
             return;
 
         const auto y_type = child->m_y_type;
@@ -379,7 +379,7 @@ public:
 
     void UpdateWidthLayout(const SailUIObjectPtr& child) override
     {
-        if (child == nullptr || child->m_show_parent.lock() != std::enable_shared_from_this<SailUIObject>::shared_from_this())
+        if (child == nullptr || child->m_show_parent.lock() != shared_from_this())
             return;
 
         const auto width_type = child->m_width_type;
@@ -405,7 +405,7 @@ public:
 
     void UpdateHeightLayout(const SailUIObjectPtr& child) override
     {
-        if (child == nullptr || child->m_show_parent.lock() != std::enable_shared_from_this<SailUIObject>::shared_from_this())
+        if (child == nullptr || child->m_show_parent.lock() != shared_from_this())
             return;
 
         const auto height_type = child->m_height_type;

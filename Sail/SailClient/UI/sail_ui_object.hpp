@@ -47,9 +47,20 @@ class SailUIObject : public std::enable_shared_from_this<SailUIObject>
 public:
     friend class SailUISystem;
     friend class SailUIObjects;
+    friend class SailUIObject;
 
 public:
     virtual ~SailUIObject() {}
+    virtual void Init() {}
+
+public:
+    template <typename T>
+    static std::shared_ptr<T> CreateUI()
+    {
+        auto ui = std::make_shared<T>();
+        ui->Init();
+        return ui;
+    }
 
 public:
     // 设置和获取无条件转移
@@ -71,7 +82,7 @@ public:
         if (m_abs_disabled) return;
 
         // 如果target没有设置，就设置为自己
-        if (!event.target) event.target = std::enable_shared_from_this<SailUIObject>::shared_from_this();
+        if (!event.target) event.target = shared_from_this();
 
         // 如果有无条件转移，那么就进行处理
         auto event_target = m_event_transfer_target.lock();
@@ -122,13 +133,13 @@ public:
 
         if (value)
         {
-            AddEventListener<SailUIMoveInEvent, SailUIObject>(std::enable_shared_from_this<SailUIObject>::shared_from_this());
-            AddEventListener<SailUIMoveOutEvent, SailUIObject>(std::enable_shared_from_this<SailUIObject>::shared_from_this());
+            AddEventListener<SailUIMoveInEvent, SailUIObject>(shared_from_this());
+            AddEventListener<SailUIMoveOutEvent, SailUIObject>(shared_from_this());
         }
         else
         {
-            RemoveEventListener<SailUIMoveInEvent>(std::enable_shared_from_this<SailUIObject>::shared_from_this());
-            RemoveEventListener<SailUIMoveOutEvent>(std::enable_shared_from_this<SailUIObject>::shared_from_this());
+            RemoveEventListener<SailUIMoveInEvent>(shared_from_this());
+            RemoveEventListener<SailUIMoveOutEvent>(shared_from_this());
         }
     }
     bool GetHandCursor() const { return m_hand_cursor; }
@@ -208,7 +219,7 @@ public:
     {
         float x = 0.0f;
         float y = 0.0f;
-        SailUIObjectPtr parent = std::enable_shared_from_this<SailUIObject>::shared_from_this();
+        SailUIObjectPtr parent = shared_from_this();
         while (parent)
         {
             float scale_x = 1.0;
@@ -235,7 +246,7 @@ public:
         CarpMatrix2D result;
 
         std::vector<SailUIObjectPtr> list;
-        SailUIObjectPtr parent = std::enable_shared_from_this<SailUIObject>::shared_from_this();
+        SailUIObjectPtr parent = shared_from_this();
         while (parent)
         {
             if (target == parent) break;
@@ -266,7 +277,7 @@ public:
     void GlobalToLocalMatrix2D(int x, int y, const SailUIObjectPtr& target, int& out_x, int& out_y)
     {
         std::vector<SailUIObjectPtr> list;
-        SailUIObjectPtr parent = std::enable_shared_from_this<SailUIObject>::shared_from_this();
+        SailUIObjectPtr parent = shared_from_this();
         while (parent)
         {
             if (target == parent) break;
@@ -289,7 +300,7 @@ public:
     {
         auto parent = GetParent();
         if (!parent) return;
-        parent->RemoveChild(std::enable_shared_from_this<SailUIObject>::shared_from_this());
+        parent->RemoveChild(shared_from_this());
     }
 
     // 移动到父控件的顶层
@@ -298,7 +309,7 @@ public:
         auto parent = m_show_parent.lock();
         if (!parent) return;
 
-        parent->SetChildIndex(std::enable_shared_from_this<SailUIObject>::shared_from_this(), parent->GetChildCount() - 1);
+        parent->SetChildIndex(shared_from_this(), parent->GetChildCount() - 1);
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -336,7 +347,7 @@ public:
         if (m_x_type == value) return;
         m_x_type = value;
         auto parent = m_show_parent.lock();
-        if (parent) parent->UpdateXLayout(std::enable_shared_from_this<SailUIObject>::shared_from_this());
+        if (parent) parent->UpdateXLayout(shared_from_this());
     }
     int GetXValue() const { return m_x_value; }
     void SetXValue(int value)
@@ -344,7 +355,7 @@ public:
         if (m_x_value == value) return;
         m_x_value = value;
         auto parent = m_show_parent.lock();
-        if (parent) parent->UpdateXLayout(std::enable_shared_from_this<SailUIObject>::shared_from_this());
+        if (parent) parent->UpdateXLayout(shared_from_this());
     }
 
     int GetY() const { return m_y; }
@@ -361,7 +372,7 @@ public:
         if (m_y_type == value) return;
         m_y_type = value;
         auto parent = m_show_parent.lock();
-        if (parent) parent->UpdateYLayout(std::enable_shared_from_this<SailUIObject>::shared_from_this());
+        if (parent) parent->UpdateYLayout(shared_from_this());
     }
     int GetYValue() const { return m_y_value; }
     void SetYValue(int value)
@@ -369,7 +380,7 @@ public:
         if (m_y_value == value) return;
         m_y_value = value;
         auto parent = m_show_parent.lock();
-        if (parent) parent->UpdateYLayout(std::enable_shared_from_this<SailUIObject>::shared_from_this());
+        if (parent) parent->UpdateYLayout(shared_from_this());
     }
 
 protected:
@@ -399,9 +410,9 @@ public:
         auto parent = m_show_parent.lock();
         if (parent)
         {
-            parent->UpdateWidthLayout(std::enable_shared_from_this<SailUIObject>::shared_from_this());
+            parent->UpdateWidthLayout(shared_from_this());
             if (m_x_type != SailUIPosType::POS_ABS && m_x_type != SailUIPosType::POS_ALIGN_STARTING && m_x_type != SailUIPosType::POS_PERCENT_STARTING)
-                parent->UpdateXLayout(std::enable_shared_from_this<SailUIObject>::shared_from_this());
+                parent->UpdateXLayout(shared_from_this());
         }
         else if (m_width_type == SailUISizeType::SIZE_ABS)
         {
@@ -417,9 +428,9 @@ public:
         auto parent = m_show_parent.lock();
         if (parent)
         {
-            parent->UpdateWidthLayout(std::enable_shared_from_this<SailUIObject>::shared_from_this());
+            parent->UpdateWidthLayout(shared_from_this());
             if (m_x_type != SailUIPosType::POS_ABS && m_x_type != SailUIPosType::POS_ALIGN_STARTING && m_x_type != SailUIPosType::POS_PERCENT_STARTING)
-                parent->UpdateXLayout(std::enable_shared_from_this<SailUIObject>::shared_from_this());
+                parent->UpdateXLayout(shared_from_this());
         }
         else if (m_width_type == SailUISizeType::SIZE_ABS)
         {
@@ -444,9 +455,9 @@ public:
         auto parent = m_show_parent.lock();
         if (parent)
         {
-            parent->UpdateHeightLayout(std::enable_shared_from_this<SailUIObject>::shared_from_this());
+            parent->UpdateHeightLayout(shared_from_this());
             if (m_y_type != SailUIPosType::POS_ABS && m_y_type != SailUIPosType::POS_ALIGN_STARTING && m_y_type != SailUIPosType::POS_PERCENT_STARTING)
-                parent->UpdateYLayout(std::enable_shared_from_this<SailUIObject>::shared_from_this());
+                parent->UpdateYLayout(shared_from_this());
         }
         else if (m_height_type == SailUISizeType::SIZE_ABS)
         {
@@ -462,9 +473,9 @@ public:
         auto parent = m_show_parent.lock();
         if (parent)
         {
-            parent->UpdateHeightLayout(std::enable_shared_from_this<SailUIObject>::shared_from_this());
+            parent->UpdateHeightLayout(shared_from_this());
             if (m_y_type != SailUIPosType::POS_ABS && m_y_type != SailUIPosType::POS_ALIGN_STARTING && m_y_type != SailUIPosType::POS_PERCENT_STARTING)
-                parent->UpdateYLayout(std::enable_shared_from_this<SailUIObject>::shared_from_this());
+                parent->UpdateYLayout(shared_from_this());
         }
         else if (m_height_type == SailUISizeType::SIZE_ABS)
         {
@@ -478,10 +489,10 @@ public:
         auto parent = m_show_parent.lock();
         if (!parent) return;
 
-        parent->UpdateWidthLayout(std::enable_shared_from_this<SailUIObject>::shared_from_this());
-        parent->UpdateHeightLayout(std::enable_shared_from_this<SailUIObject>::shared_from_this());
-        parent->UpdateXLayout(std::enable_shared_from_this<SailUIObject>::shared_from_this());
-        parent->UpdateYLayout(std::enable_shared_from_this<SailUIObject>::shared_from_this());
+        parent->UpdateWidthLayout(shared_from_this());
+        parent->UpdateHeightLayout(shared_from_this());
+        parent->UpdateXLayout(shared_from_this());
+        parent->UpdateYLayout(shared_from_this());
     }
 
     virtual void PickUp(int x, int y, SailUIObjectPtr& out_pick, int& out_x, int& out_y)
@@ -525,7 +536,7 @@ public:
         {
             if (m_modal)
             {
-                out_pick = std::enable_shared_from_this<SailUIObject>::shared_from_this();
+                out_pick = shared_from_this();
                 out_x = rel_x;
                 out_y = rel_y;
                 return;
@@ -540,7 +551,7 @@ public:
         // 如果是模态则直接返回自己
         if (m_modal)
         {
-            out_pick = std::enable_shared_from_this<SailUIObject>::shared_from_this();
+            out_pick = shared_from_this();
             out_x = rel_x;
             out_y = rel_y;
             return;
@@ -549,7 +560,7 @@ public:
         // 检查位置是否在控件范围内
         if (rel_x >= 0 && rel_y >= 0 && rel_x < m_width && rel_y < m_height)
         {
-            out_pick = std::enable_shared_from_this<SailUIObject>::shared_from_this();
+            out_pick = shared_from_this();
             out_x = rel_x;
             out_y = rel_y;
             return;
@@ -599,7 +610,7 @@ public:
         // 检查位置是否在控件范围内
         if (m_abs_visible && rel_x >= 0 && rel_y >= 0 && rel_x < GetWidth() && rel_y < GetHeight())
         {
-            out_pick = std::enable_shared_from_this<SailUIObject>::shared_from_this();
+            out_pick = shared_from_this();
             out_x = rel_x;
             out_y = rel_y;
             return;

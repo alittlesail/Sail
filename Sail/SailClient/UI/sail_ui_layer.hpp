@@ -118,7 +118,7 @@ public:
 	{
 		if (width > 0 && height > 0)
 		{
-			m_root.Scale(1.0f / static_cast<float>(width), -1.0f / static_cast<float>(height));
+			m_root.Scale(2.0f / static_cast<float>(width), -2.0f / static_cast<float>(height));
 			m_root.Translation(-1, 1);
 		}
 
@@ -180,7 +180,7 @@ protected:
 	{
 		out_mfc = nullptr;
 		out_mfd = nullptr;
-		if (!layer->GetVisible() || !layer->GetDisabled()) return;
+		if (!layer->GetVisible() || layer->GetDisabled()) return;
 
 		const auto rel_x = x - layer->GetX();
 		const auto rel_y = y - layer->GetY();
@@ -200,11 +200,10 @@ protected:
 public:
 	void Render()
 	{
-		const CarpMatrix2D empty;
-		for (auto& layer : m_normal_groups) layer->GetNativeShow()->Render(empty, false);
-		m_modal_layer->GetNativeShow()->Render(empty, false);
-		m_right_layer->GetNativeShow()->Render(empty, false);
-		m_tip_layer->GetNativeShow()->Render(empty, false);
+		for (auto& layer : m_normal_groups) layer->GetNativeShow()->Render(m_root, false);
+		m_modal_layer->GetNativeShow()->Render(m_root, false);
+		m_right_layer->GetNativeShow()->Render(m_root, false);
+		m_tip_layer->GetNativeShow()->Render(m_root, false);
 	}
 
 private:

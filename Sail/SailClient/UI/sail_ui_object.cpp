@@ -4,18 +4,18 @@
 
 bool SailUIObject::IsFocus() const
 {
-    return s_sail_ui_system.GetFocus() == std::enable_shared_from_this<SailUIObject>::shared_from_this();
+    return s_sail_ui_system.GetFocus() == shared_from_this();
 }
 
 void SailUIObject::SetFocus(bool value)
 {
     if (value)
     {
-        s_sail_ui_system.SetFocus(std::enable_shared_from_this<SailUIObject>::shared_from_this());
+        s_sail_ui_system.SetFocus(shared_from_this());
         return;
     }
 
-    if (s_sail_ui_system.GetFocus() == std::enable_shared_from_this<SailUIObject>::shared_from_this())
+    if (s_sail_ui_system.GetFocus() == shared_from_this())
         s_sail_ui_system.SetFocus(nullptr);
 }
 
@@ -23,8 +23,8 @@ bool SailUIObject::IsMouseIn()
 {
     int abs_x = 0, abs_y = 0;
     LocalToGlobal(nullptr, abs_x, abs_y);
-    int mouse_x = s_sail_ui_system.GetMouseX();
-    int mouse_y = s_sail_ui_system.GetMouseY();
+    const int mouse_x = s_sail_ui_system.GetMouseX();
+    const int mouse_y = s_sail_ui_system.GetMouseY();
     if (mouse_x < abs_x) return false;
     if (mouse_y < abs_y) return false;
     if (mouse_x > abs_x + GetWidth() * GetScaleX()) return false;
@@ -42,7 +42,7 @@ void SailUIObject::SetVisible(bool value)
 void SailUIObject::UpdateVisible()
 {
     // 如果是隐藏起来，则不会是焦点
-    if (m_visible == false && s_sail_ui_system.GetFocus() == std::enable_shared_from_this<SailUIObject>::shared_from_this())
+    if (m_visible == false && s_sail_ui_system.GetFocus() == shared_from_this())
         s_sail_ui_system.SetFocus(nullptr);
 
     const auto parent = m_show_parent.lock();
@@ -63,7 +63,7 @@ void SailUIObject::SetDisabled(bool value)
 void SailUIObject::UpdateDisabled()
 {
     // 如果是隐藏起来，则不会是焦点
-    if (m_disabled == false && s_sail_ui_system.GetFocus() == std::enable_shared_from_this<SailUIObject>::shared_from_this())
+    if (m_disabled == false && s_sail_ui_system.GetFocus() == shared_from_this())
         s_sail_ui_system.SetFocus(nullptr);
 
     const auto parent = m_show_parent.lock();

@@ -91,6 +91,7 @@
     <ClInclude Include="UI\sail_ui_layer.hpp" />
     <ClInclude Include="UI\sail_ui_object.hpp" />
     <ClInclude Include="UI\sail_ui_objects.hpp" />
+    <ClInclude Include="UI\sail_ui_quad.hpp" />
     <ClInclude Include="UI\sail_ui_system.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
