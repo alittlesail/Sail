@@ -85,12 +85,17 @@ public:
 		quad->SetHeight(100);
 		dialog->AddChild(quad);
 
-		auto image = SailUIObject::CreateUI<SailUIImage>();
-		image->SetX(100);
-		image->SetWidth(100);
-		image->SetHeight(100);
-		image->SetTexturePath("baboon.png");
-		dialog->AddChild(image);
+		for (int i = 0; i < 100; ++i)
+		{
+
+			auto image = SailUIObject::CreateUI<SailUIImage>();
+			image->SetX(100);
+			image->SetY(i);
+			image->SetWidth(100);
+			image->SetHeight(100);
+			image->SetTexturePath("baboon.png");
+			dialog->AddChild(image);
+		}
 
 		s_sail_ui_layer.AddLayer(layer);
 	}

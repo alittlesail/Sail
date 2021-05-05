@@ -8,6 +8,7 @@
 #include "sokol/sokol_app.h"
 #include "sail_schedule.hpp"
 #include "sail_resource.hpp"
+#include "sail_font.hpp"
 #include "Sail/SailClient/gfx/sail_gfx.hpp"
 
 #include <vector>
@@ -33,6 +34,7 @@ static void SokolCleanUp()
 {
     s_sail_resource.Shutdown();
     s_sail_schedule.Shutdown();
+    s_sail_font.Shutdown();
 }
 
 static void SokolEvent(const sapp_event* event)
@@ -59,7 +61,9 @@ sapp_desc sokol_main(int argc, char* argv[])
     desc.frame_cb = SokolFrame;
     desc.cleanup_cb = SokolCleanUp;
     desc.event_cb = SokolEvent;
+#if _DEBUG
     desc.win32_console_create = true;
+#endif
     return desc;
 }
 
@@ -71,6 +75,8 @@ sapp_desc sokol_main(int argc, char* argv[])
 #include "sail_schedule.hpp"
 #define SAIL_RESOURCE_IMPL
 #include "Sail/SailClient/sail_resource.hpp"
+#define SAIL_FONT_IMPL
+#include "Sail/SailClient/sail_font.hpp"
 #define SAIL_UI_LAYER_IMPL
 #include "Sail/SailClient/UI/sail_ui_layer.hpp"
 #define SAIL_UI_SYSTEM_IMPL

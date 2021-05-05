@@ -267,5 +267,8 @@
     <ClInclude Include="sail_resource.hpp">
       <Filter>Sail</Filter>
     </ClInclude>
+    <ClInclude Include="sail_font.hpp">
+      <Filter>Sail</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

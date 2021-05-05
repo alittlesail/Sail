@@ -108,7 +108,6 @@ private:
     std::unordered_map<std::string, LoadInfo> m_callback_map;
 };
 
-
 #endif
 
 #ifdef SAIL_RESOURCE_IMPL
