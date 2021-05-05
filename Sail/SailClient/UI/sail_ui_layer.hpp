@@ -26,6 +26,8 @@ public:
 	void AddLayer(const SailUIObjectsPtr& layer)
 	{
 		m_normal_groups.push_back(layer);
+		layer->SetWidth(m_view_width);
+		layer->SetHeight(m_view_height);
 	}
 
 	void RemoveLayer(const SailUIObjectsPtr& layer)
@@ -124,6 +126,9 @@ public:
 public:
 	void HandleViewResized(int width, int height)
 	{
+		m_view_width = width;
+		m_view_height = height;
+
 		if (width > 0 && height > 0)
 		{
 			m_root.Scale(2.0f / static_cast<float>(width), -2.0f / static_cast<float>(height));
@@ -159,12 +164,8 @@ public:
 
 		for (auto it = m_normal_groups.rbegin(); it != m_normal_groups.rend(); ++it)
 		{
-			const auto& children = (*it)->GetChildren();
-			for (auto sub_it = children.rbegin(); sub_it != children.rend(); ++sub_it)
-			{
-				LayerPickUp(*sub_it, x, y, out_mfc, out_mfd, out_x, out_y);
-				if (out_mfc) return;
-			}
+			LayerPickUp(*it, x, y, out_mfc, out_mfd, out_x, out_y);
+			if (out_mfc) return;
 		}
 	}
 
@@ -222,6 +223,8 @@ private:
 	SailUIObjectsPtr m_tip_layer;
 
 private:
+	int m_view_width = 0;
+	int m_view_height = 0;
 	CarpMatrix2D m_root;
 };
 

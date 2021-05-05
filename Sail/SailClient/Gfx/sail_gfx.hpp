@@ -16,6 +16,7 @@
 #endif
 
 #include "sokol/sokol_gfx.h"
+#include <vector>
 
 class SailGfx2DBatchRender
 {
@@ -40,6 +41,13 @@ public:
         VERTEX_POSITION_OFFSET = X_0,
         VERTEX_COLOR_OFFSET = R_0,
         VERTEX_TEXCOORD_OFFSET = U_0,
+    };
+
+    struct Gfx2DBatchCmd
+    {
+        sg_image texture{ SG_INVALID_ID };
+        int vertex_offset = 0;
+        int vertex_count = 0;
     };
 
 public:
@@ -81,7 +89,7 @@ public:
             m_pipeline.id = SG_INVALID_ID;
         }
         
-        m_texture.id = SG_INVALID_ID;
+        m_cmd_list.resize(0);
     }
 
     const sg_image& GetQuadTexture()
@@ -108,28 +116,38 @@ public:
 public:
     void Push(const sg_image& texture, float vertices[VERTEX_ALL_FLOAT_COUNT])
     {
-        if (m_texture.id != texture.id)
+        if (m_cmd_list.empty())
         {
-            Flush();
-            m_texture = texture;
+            Gfx2DBatchCmd cmd;
+            cmd.texture = texture;
+            cmd.vertex_count = VERTEX_ALL_FLOAT_COUNT;
+            m_cmd_list.emplace_back(cmd);
+        }
+        else
+        {
+            auto& back = m_cmd_list.back();
+            if (back.texture.id == texture.id)
+            {
+                m_cmd_list.back().vertex_count += VERTEX_ALL_FLOAT_COUNT;
+            }
+            else
+            {
+                Gfx2DBatchCmd cmd;
+                cmd.texture = texture;
+                cmd.vertex_count = VERTEX_ALL_FLOAT_COUNT;
+                cmd.vertex_offset = back.vertex_count;
+                m_cmd_list.emplace_back(cmd);
+            }
         }
 
         AddSize(VERTEX_ALL_FLOAT_COUNT);
         memcpy(m_vertices + m_size, vertices, VERTEX_ALL_FLOAT_COUNT * sizeof(float));
         m_size += VERTEX_ALL_FLOAT_COUNT;
-
-        if (m_size > 1024) Flush();
     }
 
     void Flush()
     {
         Init();
-
-        if (m_texture.id == SG_INVALID_ID)
-        {
-            m_size = 0;
-            return;
-        }
 
         if (m_size == 0) return;
 
@@ -154,14 +172,19 @@ public:
 
         m_buffer_size = m_size;
 
-        sg_bindings bind{};
-        bind.vertex_buffers[0] = m_buffer;
-        bind.fs_images[0] = m_texture;
+        for (auto& cmd : m_cmd_list)
+        {
+            sg_bindings bind{};
+            bind.vertex_buffers[0] = m_buffer;
+            bind.vertex_buffer_offsets[0] = cmd.vertex_offset * sizeof(float);
+            bind.fs_images[0] = cmd.texture;
 
-        sg_apply_pipeline(m_pipeline);
-        sg_apply_bindings(&bind);
-        sg_draw(0, static_cast<int>(m_size) / static_cast<int>(VERTEX_ONE_FLOAT_COUNT), 1);
-
+            sg_apply_pipeline(m_pipeline);
+            sg_apply_bindings(&bind);
+            sg_draw(0, cmd.vertex_count / static_cast<int>(VERTEX_ONE_FLOAT_COUNT), 1);
+        }
+        
+        m_cmd_list.resize(0);
         m_size = 0;
     }
 
@@ -243,13 +266,14 @@ private:
     size_t m_size = 0;
     size_t m_capacity = 0;
 
+    std::vector<Gfx2DBatchCmd> m_cmd_list;
+
 private:
     bool m_init = false;
     sg_pipeline m_pipeline{ SG_INVALID_ID };
     sg_buffer m_buffer{ SG_INVALID_ID };
     size_t m_buffer_size = 0;
     sg_shader m_shader{ SG_INVALID_ID };
-    sg_image m_texture{ SG_INVALID_ID };
 
 private:
     sg_image m_quad_texture{ SG_INVALID_ID };

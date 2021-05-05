@@ -308,7 +308,7 @@ public:
     // 移动到父控件的顶层
     void MoveToTop()
     {
-        auto parent = m_show_parent.lock();
+        auto parent = GetParent();
         if (!parent) return;
 
         parent->SetChildIndex(shared_from_this(), parent->GetChildCount() - 1);
@@ -538,7 +538,7 @@ public:
         const auto rel_x = static_cast<int>(xx) + m_center_x;
         const auto rel_y = static_cast<int>(yy) + m_center_y;
 
-        if (m_scale_x <= 0 || m_scale_y <= 0)
+        if (m_scale_x == 0 || m_scale_y == 0)
         {
             if (m_modal)
             {

@@ -73,14 +73,17 @@ public:
 
 	void Test()
 	{
-
-		auto container = SailUIObject::CreateUI<SailUIObjects>();
+		auto layer = SailUIObject::CreateUI<SailUIObjects>();
 		auto dialog = SailUIObject::CreateUI<SailUIObjects>();
-		container->AddChild(dialog);
-		// auto quad = SailUIObject::CreateUI<SailUIQuad>();
-		// quad->SetWidth(100);
-		// quad->SetHeight(100);
-		// dialog->AddChild(quad);
+		dialog->SetWidth(200);
+		dialog->SetHeight(200);
+
+
+		layer->AddChild(dialog);
+		auto quad = SailUIObject::CreateUI<SailUIQuad>();
+		quad->SetWidth(100);
+		quad->SetHeight(100);
+		dialog->AddChild(quad);
 
 		auto image = SailUIObject::CreateUI<SailUIImage>();
 		image->SetX(100);
@@ -88,8 +91,8 @@ public:
 		image->SetHeight(100);
 		image->SetTexturePath("baboon.png");
 		dialog->AddChild(image);
-		s_sail_ui_layer.AddLayer(container);
 
+		s_sail_ui_layer.AddLayer(layer);
 	}
 
 	void Shutdown()
@@ -97,6 +100,7 @@ public:
 		s_sail_gfx_2d_batch_render.Clear();
 		s_sail_ui_texture_system.Shutdown();
 		s_sail_ui_layer.Shutdown();
+		s_sail_ui_system.Shutdown();
 
 		//  Õ∑≈‰÷»æ
 		sg_shutdown();

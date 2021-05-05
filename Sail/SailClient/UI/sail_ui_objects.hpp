@@ -227,7 +227,7 @@ public:
         const auto rel_x = static_cast<int>(xx) + m_center_x;
         const auto rel_y = static_cast<int>(yy) + m_center_y;
 
-        if (m_scale_x <= 0 || m_scale_y <= 0)
+        if (m_scale_x == 0 || m_scale_y == 0)
         {
             if (m_modal)
             {
@@ -255,7 +255,7 @@ public:
                 return;
             }
 
-            out_pick = shared_from_this();
+            out_pick = nullptr;
             out_x = rel_x;
             out_y = rel_y;
             return;

@@ -21,6 +21,17 @@ struct SailTouchInfo
 class SailUISystem
 {
 public:
+	void Shutdown()
+	{
+		m_touch_map.clear();
+		m_mfc = nullptr;
+		
+		m_sfc = nullptr;
+		m_mfd = nullptr;
+		m_wfc = nullptr;
+	}
+
+public:
 	SailUIObjectPtr GetFocus() const { return m_focus.lock(); }
 	void SetFocus(const SailUIObjectPtr& control)
 	{
