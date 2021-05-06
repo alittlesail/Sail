@@ -30,6 +30,18 @@ public:
     void SetFontSize(int font_size) { m_sail_2d_text->SetFontSize(font_size); }
     int GetFontSize() const override { return m_sail_2d_text->GetFontSize(); }
 
+    void SetBold(bool bold) { m_sail_2d_text->SetBold(bold); }
+    bool GetBold() const { return m_sail_2d_text->GetBold(); }
+
+    void SetUnderline(bool underline) { m_sail_2d_text->SetUnderline(underline); }
+    bool GetUnderline() const { return m_sail_2d_text->GetUnderline(); }
+
+    void SetDeleteline(bool deleteline) { m_sail_2d_text->SetDeleteline(deleteline); }
+    bool GetDeleteline() const { return m_sail_2d_text->GetDeleteline(); }
+
+    void SetItalic(bool italic) { m_sail_2d_text->SetItalic(italic); }
+    bool GetItalic() const { return m_sail_2d_text->GetItalic(); }
+
     void AdjustSize()
     {
         SetWidth(m_sail_2d_text->GetRealWidth());

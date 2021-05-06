@@ -87,6 +87,7 @@ public:
 		m_need_redraw = true;
 		m_calc_real_size = false;
 	}
+	bool GetBold() const { return (m_font_style & CARP_FONT_STYLE_BOLD) != 0; }
 	void SetUnderline(bool underline)
 	{
 		const bool is_underline = (m_font_style & CARP_FONT_STYLE_UNDERLINE) != 0;
@@ -101,6 +102,7 @@ public:
 		m_need_redraw = true;
 		m_calc_real_size = false;
 	}
+	bool GetUnderline() const { return (m_font_style & CARP_FONT_STYLE_UNDERLINE) != 0; }
 	void SetDeleteline(bool deleteline)
 	{
 		const bool is_deleteline = (m_font_style & CARP_FONT_STYLE_DELETELINE) != 0;
@@ -115,6 +117,7 @@ public:
 		m_need_redraw = true;
 		m_calc_real_size = false;
 	}
+	bool GetDeleteline() const { return (m_font_style & CARP_FONT_STYLE_DELETELINE) != 0; }
 	void SetItalic(bool italic)
 	{
 		const bool is_italic = (m_font_style & CARP_FONT_STYLE_ITALIC) != 0;
@@ -129,6 +132,7 @@ public:
 		m_need_redraw = true;
 		m_calc_real_size = false;
 	}
+	bool GetItalic() const { return (m_font_style & CARP_FONT_STYLE_ITALIC) != 0; }
 
 public:
 	void SetFontPath(const std::string& font_path)

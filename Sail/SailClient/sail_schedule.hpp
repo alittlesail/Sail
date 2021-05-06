@@ -20,6 +20,7 @@
 #include "UI/sail_ui_quad.hpp"
 #include "UI/sail_ui_image.hpp"
 #include "UI/sail_ui_text.hpp"
+#include "UI/sail_ui_textarea.hpp"
 
 class Application;
 
@@ -115,13 +116,27 @@ public:
 		}
 
 
-		auto text = SailUIObject::CreateUI<SailUIText>();
-		text->SetX(300);
-		text->SetFontPath("YaHei-Consolas.ttf");
-		text->SetFontSize(30);
-		text->SetText("Hello Sail");
-		text->AdjustSize();
-		dialog->AddChild(text);
+		{
+			auto text = SailUIObject::CreateUI<SailUIText>();
+			text->SetX(300);
+			text->SetFontPath("YaHei-Consolas.ttf");
+			text->SetFontSize(30);
+			text->SetText("Hello Sail Text");
+			text->AdjustSize();
+			dialog->AddChild(text);
+		}
+
+		{
+			auto text = SailUIObject::CreateUI<SailUITextArea>();
+			text->SetX(300);
+			text->SetY(35);
+			text->SetWidth(200);
+			text->SetHeight(200);
+			text->SetFontPath("YaHei-Consolas.ttf");
+			text->SetFontSize(30);
+			text->SetText("Hello Sail TextArea");
+			dialog->AddChild(text);
+		}
 		
 		s_sail_ui_layer.AddLayer(layer);
 	}
