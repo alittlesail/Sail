@@ -3,6 +3,8 @@
 
 #include <string>
 
+
+#include "sail_font.hpp"
 #include "2D/sail_2d_quad.hpp"
 #include "Sail/SailClient/UI/sail_ui_layer.hpp"
 #include "Sail/SailClient/UI/sail_ui_system.hpp"
@@ -17,6 +19,7 @@
 #include "sokol/sokol_glue.h"
 #include "UI/sail_ui_quad.hpp"
 #include "UI/sail_ui_image.hpp"
+#include "UI/sail_ui_text.hpp"
 
 class Application;
 
@@ -73,6 +76,20 @@ public:
 
 	void Test()
 	{
+		std::set<std::string> path_set;
+		path_set.insert("YaHei-Consolas.ttf");
+		s_sail_resource.Progress(path_set, [this](bool finished, std::unordered_map<std::string, SailResource::ProgressInfo>& info_map)
+			{
+				if (!finished) return;
+				auto& info = info_map["YaHei-Consolas.ttf"];
+			    if (info.finished && !info.failed)
+				    s_sail_font.AddFont("YaHei-Consolas.ttf", info.memory);
+				Test2();
+			});
+	}
+
+	void Test2()
+	{
 		auto layer = SailUIObject::CreateUI<SailUIObjects>();
 		auto dialog = SailUIObject::CreateUI<SailUIObjects>();
 		dialog->SetWidth(200);
@@ -97,6 +114,15 @@ public:
 			dialog->AddChild(image);
 		}
 
+
+		auto text = SailUIObject::CreateUI<SailUIText>();
+		text->SetX(300);
+		text->SetFontPath("YaHei-Consolas.ttf");
+		text->SetFontSize(30);
+		text->SetText("Hello Sail");
+		text->AdjustSize();
+		dialog->AddChild(text);
+		
 		s_sail_ui_layer.AddLayer(layer);
 	}
 

@@ -25,7 +25,7 @@ public:
 public:
 	void AddLayer(const SailUIObjectsPtr& layer)
 	{
-		m_normal_groups.push_back(layer);
+		m_normal_groups.emplace_back(layer);
 		layer->SetWidth(m_view_width);
 		layer->SetHeight(m_view_height);
 	}

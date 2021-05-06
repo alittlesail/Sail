@@ -9,7 +9,6 @@
 #include "sail_schedule.hpp"
 #include "sail_resource.hpp"
 #include "sail_font.hpp"
-#include "Sail/SailClient/gfx/sail_gfx.hpp"
 
 #include <vector>
 #include <string>
@@ -77,6 +76,8 @@ sapp_desc sokol_main(int argc, char* argv[])
 #include "Sail/SailClient/sail_resource.hpp"
 #define SAIL_FONT_IMPL
 #include "Sail/SailClient/sail_font.hpp"
+#define SAIL_2D_TEXT_IMPL
+#include "Sail/SailClient/2D/sail_2d_text.hpp"
 #define SAIL_UI_LAYER_IMPL
 #include "Sail/SailClient/UI/sail_ui_layer.hpp"
 #define SAIL_UI_SYSTEM_IMPL

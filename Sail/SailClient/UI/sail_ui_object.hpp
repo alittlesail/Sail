@@ -167,7 +167,7 @@ public:
 
     // 文本控件相关接口
 public:
-    virtual const std::string& GetText() { static std::string empty; return empty; }
+    virtual const std::string& GetText() const { static std::string empty; return empty; }
     virtual void SetText(const std::string& value) {}
 
     // 选择控件相关接口

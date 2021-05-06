@@ -270,5 +270,11 @@
     <ClInclude Include="sail_font.hpp">
       <Filter>Sail</Filter>
     </ClInclude>
+    <ClInclude Include="2D\sail_2d_text.hpp">
+      <Filter>Sail\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\sail_ui_text.hpp">
+      <Filter>Sail\UI</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

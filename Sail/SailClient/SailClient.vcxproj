@@ -85,6 +85,7 @@
     <ClInclude Include="2D\sail_2d_object.hpp" />
     <ClInclude Include="2D\sail_2d_objects.hpp" />
     <ClInclude Include="2D\sail_2d_quad.hpp" />
+    <ClInclude Include="2D\sail_2d_text.hpp" />
     <ClInclude Include="Gfx\sail_gfx.hpp" />
     <ClInclude Include="sail_font.hpp" />
     <ClInclude Include="sail_resource.hpp" />
@@ -96,6 +97,7 @@
     <ClInclude Include="UI\sail_ui_objects.hpp" />
     <ClInclude Include="UI\sail_ui_quad.hpp" />
     <ClInclude Include="UI\sail_ui_system.hpp" />
+    <ClInclude Include="UI\sail_ui_text.hpp" />
     <ClInclude Include="UI\sail_ui_texture.hpp" />
     <ClInclude Include="UI\sail_ui_texture_system.hpp" />
   </ItemGroup>

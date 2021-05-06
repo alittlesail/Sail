@@ -46,7 +46,6 @@ public:
     struct Gfx2DBatchCmd
     {
         sg_image texture{ SG_INVALID_ID };
-        int vertex_offset = 0;
         int vertex_count = 0;
     };
 
@@ -135,7 +134,6 @@ public:
                 Gfx2DBatchCmd cmd;
                 cmd.texture = texture;
                 cmd.vertex_count = VERTEX_ALL_FLOAT_COUNT;
-                cmd.vertex_offset = back.vertex_count;
                 m_cmd_list.emplace_back(cmd);
             }
         }
@@ -172,12 +170,15 @@ public:
 
         m_buffer_size = m_size;
 
+        int vertex_offset = 0;
         for (auto& cmd : m_cmd_list)
         {
             sg_bindings bind{};
             bind.vertex_buffers[0] = m_buffer;
-            bind.vertex_buffer_offsets[0] = cmd.vertex_offset * sizeof(float);
+            bind.vertex_buffer_offsets[0] = vertex_offset * sizeof(float);
             bind.fs_images[0] = cmd.texture;
+
+            vertex_offset += cmd.vertex_count;
 
             sg_apply_pipeline(m_pipeline);
             sg_apply_bindings(&bind);

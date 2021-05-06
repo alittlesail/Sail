@@ -5,49 +5,33 @@
 
 #include "Carp/carp_file.hpp"
 #include "Carp/carp_font.hpp"
+#include "Carp/carp_log.hpp"
 #include "Carp/carp_surface.hpp"
 
 class SailFont
 {
 public:
-	~SailFont() { Shutdown(); }
+	~SailFont() { }
 
 public:
-	CarpFont* GetFont(const char* font_path, unsigned int font_size, unsigned int font_style)
+	std::shared_ptr<CarpFont> GetFont(const char* font_path, unsigned int font_size, unsigned int font_style)
 	{
 		// check font path
 		if (!font_path) return nullptr;
-		std::string font_full_path = font_path;
+		const std::string font_full_path = font_path;
 
 		// find font
 		auto& style_map = m_font_map[font_full_path];
 		auto& size_map = style_map[font_style];
 
 		// find font size
-		auto size_it = size_map.find(font_size);
+		const auto size_it = size_map.find(font_size);
 		if (size_it != size_map.end())
 			return size_it->second;
 
-		// get file name
-		std::string font_just_name = CarpFile::GetFileNameByPath(font_full_path);
-		std::string font_just_path = font_full_path.substr(0, font_full_path.size() - font_just_name.size());
-
-		CarpFont* font = LoadFont(font_path, font_size, font_style);
-		if (font == nullptr)
-		{
-			// if create failed then use system font
-#ifdef _WIN32
-			std::string new_font_path = "C:\\Windows\\Fonts\\";
-			new_font_path += font_just_name;
-			font = LoadFont(new_font_path, font_size, font_style);
-#elif __ANDROID__
-			CARP_ERROR("create font failed: path(" << font_path << ") can't find or font_size(" << font_size << ") not support " << ", and try /system/fonts/Miui-Regular.ttf");
-			std::string new_font_path = "/system/fonts/";
-			new_font_path += font_just_name;
-			font = LoadFont(new_font_path, font_size, font_style);
-#endif
-		}
-		if (font == nullptr) return nullptr;
+		const auto it = m_font_file_map.find(font_path);
+		if (it == m_font_file_map.end()) return nullptr;
+		auto font = std::make_shared<CarpFont>(it->second.data(), it->second.size(), font_size, font_style);
 
 		// save font
 		size_map[font_size] = font;
@@ -96,50 +80,30 @@ public:
 
 	void Shutdown()
 	{
-		for (auto& font_pair : m_font_map)
-			for (auto& style_pair : font_pair.second)
-				for (auto& size_pair : style_pair.second)
-					delete size_pair.second;
 		m_font_map.clear();
-		for (auto& pair : m_font_file_map)
-			delete pair.second;
 		m_font_file_map.clear();
 	}
 
-private:
-	CarpFont* LoadFont(const std::string& font_path, unsigned int font_size, unsigned int font_style)
+	void AddFont(const std::string& font_path, std::vector<char>& memory)
 	{
-		CarpLocalFile* file = nullptr;
-		const auto it = m_font_file_map.find(font_path);
-		if (it == m_font_file_map.end())
+		auto it = m_font_file_map.find(font_path);
+		if (it != m_font_file_map.end())
 		{
-			file = new CarpLocalFile();
-			file->SetPath(font_path.c_str());
-			if (!file->Load(false))
-			{
-				delete file;
-				return nullptr;
-			}
-
-			m_font_file_map[font_path] = file;
+			CARP_ERROR("already font path:" << font_path);
+			return;
 		}
-		else
-		{
-			file = it->second;
-		}
-
-		return new CarpFont(file->GetContent(), file->GetSize(), font_size, font_style);
+		m_font_file_map[font_path] = std::move(memory);
 	}
 
 private:
 	// font size map font object
-	typedef std::map<unsigned int, CarpFont*> TTF_FontSizeMap;
+	typedef std::map<unsigned int, std::shared_ptr<CarpFont>> FontSizeMap;
 	// font style map font object
-	typedef std::map<unsigned int, TTF_FontSizeMap> TTF_FontStyleMap;
+	typedef std::map<unsigned int, FontSizeMap> FontStyleMap;
 	// font path map TTF_FontMap
-	typedef std::map<std::string, TTF_FontStyleMap> TTF_FontMap;
-	TTF_FontMap m_font_map;
-	std::map<std::string, CarpLocalFile*> m_font_file_map;
+	typedef std::map<std::string, FontStyleMap> FontMap;
+	FontMap m_font_map;
+	std::map<std::string, std::vector<char>> m_font_file_map;
 
 };
 
