@@ -41,7 +41,7 @@ public:
 		if (m_text.empty()) return 0;
 		if (m_font_path.empty()) return 0;
 		if (m_font_size == 0) return 0;
-		if (m_font == nullptr) m_font = s_sail_font.GetFont(m_font_path.c_str(), m_font_size, m_font_style);
+		if (m_font == nullptr) m_font = s_sail_font.GetFont(m_font_path, m_font_size, m_font_style);
 		if (m_font == nullptr) return 0;
 
 		// calc size
@@ -61,7 +61,7 @@ public:
 		if (m_font_size == 0) return 0;
 
 		if (m_font == nullptr)
-			m_font = s_sail_font.GetFont(m_font_path.c_str(), m_font_size, m_font_style);
+			m_font = s_sail_font.GetFont(m_font_path, m_font_size, m_font_style);
 		if (m_font == nullptr) return 0;
 
 		// calc size
@@ -165,14 +165,14 @@ public:
 	const std::string& GetText() const { return m_text; }
 	int GetFontHeight()
 	{
-		if (m_font == nullptr) m_font = s_sail_font.GetFont(m_font_path.c_str(), m_font_size, m_font_style);
+		if (m_font == nullptr) m_font = s_sail_font.GetFont(m_font_path, m_font_size, m_font_style);
 		if (m_font == nullptr) return 0;
 
 		return m_font->GetFontHeight();
 	}
 	int CutTextByWidth(float width, const char* content, int max_width)
 	{
-		if (m_font == nullptr) m_font = s_sail_font.GetFont(m_font_path.c_str(), m_font_size, m_font_style);
+		if (m_font == nullptr) m_font = s_sail_font.GetFont(m_font_path, m_font_size, m_font_style);
 		if (m_font == nullptr) return 0;
 
 		m_calc_width_list.clear();
@@ -183,7 +183,7 @@ public:
 	void ClearCutWidthCache() { m_calc_width_list.clear(); }
 	int CalcTextWidth(const char* content)
 	{
-		if (m_font == nullptr) m_font = s_sail_font.GetFont(m_font_path.c_str(), m_font_size, m_font_style);
+		if (m_font == nullptr) m_font = s_sail_font.GetFont(m_font_path, m_font_size, m_font_style);
 		if (m_font == nullptr) return 0;
 
 		return m_font->CutTextWidth(content, false);
@@ -229,7 +229,7 @@ private:
 		}
 
 		if (m_text.empty()) return;
-		if (m_font == nullptr) m_font = s_sail_font.GetFont(m_font_path.c_str(), m_font_size, m_font_style);
+		if (m_font == nullptr) m_font = s_sail_font.GetFont(m_font_path, m_font_size, m_font_style);
 		if (m_font == nullptr) return;
 
 		m_texture_info = CreateSail2DTextureInfo(m_font, m_text);
@@ -277,47 +277,23 @@ Sail2DTextTextureInfo* CreateSail2DTextureInfo(const std::shared_ptr<CarpFont>& 
 	}
 
 	// create surface
-	auto* surface = s_sail_font.CreateSurface(font.get(), text.c_str());
-	if (!surface)
+	int width = 0, height = 0;
+	auto image = s_sail_font.CreateTexture(font, text.c_str(), width, height);
+	if (image.id == SG_INVALID_ID)
 	{
 		CARP_ERROR("Font Helper create surface failed!");
 		return nullptr;
 	}
 
-	if (surface->GetWidth() <= 0 || surface->GetHeight() <= 0)
-	{
-		delete surface;
-		CARP_ERROR("surface:(w, h)=(" << surface->GetWidth() << ", " << surface->GetHeight() << ")");
-		return nullptr;
-	}
-
-	auto image = sg_alloc_image();
-	if (image.id == SG_INVALID_ID)
-	{
-		delete surface;
-		return nullptr;
-	}
-
-	sg_image_desc desc{};
-	desc.width = surface->GetWidth();
-	desc.height = surface->GetHeight();
-	desc.pixel_format = SG_PIXELFORMAT_RGBA8;
-	desc.min_filter = SG_FILTER_LINEAR;
-	desc.mag_filter = SG_FILTER_LINEAR;
-	desc.data.subimage[0][0].ptr = surface->GetPixels();
-	desc.data.subimage[0][0].size = surface->GetWidth() * surface->GetHeight() * 4;
-	sg_init_image(image, desc);
-
 	auto* info = new Sail2DTextTextureInfo();
 	info->font = font;
 	info->ref_count = 1;
 	info->text = text;
-	info->width = surface->GetWidth();
-	info->height = surface->GetHeight();
+	info->width = width;
+	info->height = height;
 	info->texture = image;
 	text_map[text] = info;
 
-	delete surface;
 	return info;
 }
 

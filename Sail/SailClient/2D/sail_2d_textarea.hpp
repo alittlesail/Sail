@@ -178,7 +178,7 @@ private:
 		if (m_text.empty()) return;
 		if (m_font_path.empty()) return;
 		if (m_font_size == 0) return;
-		if (m_font == nullptr) m_font = s_sail_font.GetFont(m_font_path.c_str(), m_font_size, m_font_style);
+		if (m_font == nullptr) m_font = s_sail_font.GetFont(m_font_path, m_font_size, m_font_style);
 		if (m_font == nullptr) return;
 
 		int width = m_width;
@@ -291,7 +291,7 @@ private:
 			if (current_height_offset > total_height || current_height_offset + font_height <= 0)
 				continue;
 			// create text surface
-			auto* surface = s_sail_font.CreateSurface(m_font.get(), string_array[i].c_str());
+			auto* surface = s_sail_font.CreateSurface(m_font, string_array[i].c_str());
 			if (!surface) continue;
 
 			// offset at width

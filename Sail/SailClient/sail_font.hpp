@@ -7,6 +7,7 @@
 #include "Carp/carp_font.hpp"
 #include "Carp/carp_log.hpp"
 #include "Carp/carp_surface.hpp"
+#include "Gfx/sail_gfx.hpp"
 
 class SailFont
 {
@@ -14,10 +15,8 @@ public:
 	~SailFont() { }
 
 public:
-	std::shared_ptr<CarpFont> GetFont(const char* font_path, unsigned int font_size, unsigned int font_style)
+	std::shared_ptr<CarpFont> GetFont(const std::string& font_path, unsigned int font_size, unsigned int font_style)
 	{
-		// check font path
-		if (!font_path) return nullptr;
 		const std::string font_full_path = font_path;
 
 		// find font
@@ -40,7 +39,7 @@ public:
 		return font;
 	}
 
-	CarpSurface* CreateSurface(CarpFont* font, const char* content)
+	CarpSurface* CreateSurface(const std::shared_ptr<CarpFont>& font, const char* content)
 	{
 		if (content == 0 || font == 0) return nullptr;
 
@@ -78,6 +77,37 @@ public:
 		return surface;
 	}
 
+	sg_image CreateTexture(const std::shared_ptr<CarpFont>& font, const char* content, int& width, int& height)
+	{
+		sg_image image{ SG_INVALID_ID };
+
+		auto* surface = CreateSurface(font, content);
+		if (surface == nullptr) return image;
+
+		width = surface->GetWidth();
+		height = surface->GetHeight();
+
+		image = sg_alloc_image();
+		if (image.id == SG_INVALID_ID)
+		{
+			delete surface;
+			return image;
+		}
+
+		sg_image_desc desc{};
+		desc.width = surface->GetWidth();
+		desc.height = surface->GetHeight();
+		desc.pixel_format = SG_PIXELFORMAT_RGBA8;
+		desc.min_filter = SG_FILTER_LINEAR;
+		desc.mag_filter = SG_FILTER_LINEAR;
+		desc.data.subimage[0][0].ptr = surface->GetPixels();
+		desc.data.subimage[0][0].size = surface->GetWidth() * surface->GetHeight() * 4;
+		sg_init_image(image, desc);
+		delete surface;
+
+		return image;
+	}
+
 	void Shutdown()
 	{
 		m_font_map.clear();
@@ -89,7 +119,7 @@ public:
 		auto it = m_font_file_map.find(font_path);
 		if (it != m_font_file_map.end())
 		{
-			CARP_ERROR("already font path:" << font_path);
+			CARP_ERROR("already have font path:" << font_path);
 			return;
 		}
 		m_font_file_map[font_path] = std::move(memory);
